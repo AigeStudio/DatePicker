@@ -403,10 +403,10 @@ public class CalendarBiz implements IBO {
 
     public String[][] buildGregorian(int year, int month) {
         String a[][] = new String[6][7];
-        Calendar 日历 = Calendar.getInstance();
-        日历.set(year, month - 1, 1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, 1);
 
-        int 星期几 = 日历.get(Calendar.DAY_OF_WEEK) - 1;
+        int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         int day = 0;
 
         if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
@@ -426,7 +426,7 @@ public class CalendarBiz implements IBO {
         int nextDay = 1;
         for (int k = 0; k < 6; k++) {
             if (k == 0) {
-                for (int j = 星期几; j < 7; j++) {
+                for (int j = week; j < 7; j++) {
                     a[k][j] = "" + nextDay;
                     nextDay++;
                 }
