@@ -2,13 +2,16 @@
 ***
 **Here is begin of CN document.**
 # 日历选择器
-灰常灰常简单的Android日历选择器（注：暂不支持横屏操作）
+灰常灰常简单的Android日历选择器（注：暂不支持横屏操作，农历节气有一到两天的误差）
+##版本迭代
+###1.0.0 beta
+横屏暂未考虑，竖屏暂未发现问题，项目使用中
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 ##功能简介
 * 支持多选返回结果
 * 支持主色调定制
-* 中英文自动切换
+* 农历隐藏
 
 更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 ##如何集成到项目
@@ -50,13 +53,16 @@ mDatePicker.setOnDateSelected(new OnDateSelected() {
 ***
 **这里开始是英文文档**
 #DatePicker
-A simple date picker for android（note:it doesn't work with horizontal view now）
+A simple date picker for android（note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term）
+##Version
+###1.0.0 beta
+Doesn't work with horizontal view yet,but vertical right.
 ##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 ##Function
 * multiple-pick for date
 * specify primary colour
-* auto shift to CN or EN
+* hide lunar display
 
 You can see [IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java) for more help.
 ##How to add to your project
