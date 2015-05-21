@@ -56,6 +56,8 @@ mDatePicker.setOnDateSelected(new OnDateSelected() {
 **这里开始是英文文档**
 #DatePicker
 A simple date picker for android（note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term）
+##Android API Needs
+**API 1**
 ##Version
 ###1.0.0 beta
 Doesn't work with horizontal view yet,but vertical right.
