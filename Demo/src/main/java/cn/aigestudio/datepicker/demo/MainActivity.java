@@ -35,12 +35,9 @@ import cn.aigestudio.datepicker.views.DatePicker;
 
 /**
  * Demo应用的主Activity
- * <p/>
  * The main activity of demo
  *
- * @author AigeStudio https://github.com/AigeStudio
- * @version 1.0.0 beta
- * @since 2015/3/26
+ * @author AigeStudio 2015-03-26
  */
 public class MainActivity extends Activity {
     private DatePicker mDatePicker;

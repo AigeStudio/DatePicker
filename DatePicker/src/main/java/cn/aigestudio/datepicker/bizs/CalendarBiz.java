@@ -1,19 +1,4 @@
-/*
- Copyright 2014-2015 AigeStudio(https://github.com/AigeStudio)
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-*/
-package cn.aigestudio.datepicker.business;
+package cn.aigestudio.datepicker.bizs;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,15 +12,12 @@ import cn.aigestudio.datepicker.entities.Gregorian;
 import cn.aigestudio.datepicker.entities.Lunar;
 
 /**
- * 日历视图业务类
- * <p/>
- * The biz of CalendarView{@link cn.aigestudio.datepicker.views.CalendarView}
+ * 日历业务对象
+ * The biz of calendar
  *
- * @author AigeStudio https://github.com/AigeStudio
- * @version 1.0.0 beta
- * @since 2015/3/26
+ * @author AigeStudio 2015-03-23
  */
-public class CalendarBiz implements IBO {
+public class CalendarBiz implements IBO{
     private static final int[] LUNAR_YEAR_INFO = {1887, 0x1694, 0x16aa, 0x4ad5,
             0xab6, 0xc4b7, 0x4ae, 0xa56, 0xb52a, 0x1d2a, 0xd54, 0x75aa, 0x156a,
             0x1096d, 0x95c, 0x14ae, 0xaa4d, 0x1a4c, 0x1b2a, 0x8d55, 0xad4,
@@ -119,8 +101,8 @@ public class CalendarBiz implements IBO {
     private Map<Integer, List<String>> solarTermIdCreated = new HashMap<>();
     private Map<Integer, List<String>> solarTermNameCreated = new HashMap<>();
 
-    private Map<Integer, String[][]> gregorianCreated = new HashMap<>();//生成的公历数组
-    private Map<Integer, String[][]> lunarCreated = new HashMap<>();//生成的农历数组
+    private Map<Integer, String[][]> gregorianCreated = new HashMap<>();
+    private Map<Integer, String[][]> lunarCreated = new HashMap<>();
 
     public CalendarBiz(int index, int year, int month) {
         buildSolarTerm(year);

@@ -1,18 +1,3 @@
-/*
- Copyright 2014-2015 AigeStudio(https://github.com/AigeStudio)
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-*/
 package cn.aigestudio.datepicker.views;
 
 import android.content.Context;
@@ -26,19 +11,15 @@ import cn.aigestudio.datepicker.entities.Language;
 import cn.aigestudio.datepicker.interfaces.OnDateSelected;
 
 /**
- * 日历选择器的标题视图
- * <p/>
- * Title of DatePicker{@link cn.aigestudio.datepicker.views.DatePicker}.
+ * 日期选择器的标题视图
  *
- * @author AigeStudio https://github.com/AigeStudio
- * @version 1.0.0 beta
- * @since 2015/3/26
+ * @author AigeStudio 2015-05-21
  */
-public class TitleView extends LinearLayout implements CalendarView.OnPageChange, CalendarView.OnSizeChanged {
+public class TitleView extends LinearLayout implements MonthView.OnPageChangeListener, MonthView.OnSizeChangedListener {
     private String[] monthTitles;
-    private TextView tvYear, tvMonth, tvComfirm;
+    private TextView tvYear, tvMonth, tvConfirm;
     private OnDateSelected mOnDateSelected;
-    private CalendarView mCalendarView;
+    private MonthView monthView;
 
     public TitleView(Context context) {
         super(context);
@@ -57,26 +38,26 @@ public class TitleView extends LinearLayout implements CalendarView.OnPageChange
         tvMonth.setGravity(Gravity.CENTER);
         tvMonth.setTextColor(Color.WHITE);
 
-        tvComfirm = new TextView(context);
-        tvComfirm.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
-        tvComfirm.setText(Language.getLanguage(context).ensureTitle());
-        tvComfirm.setTextColor(Color.WHITE);
-        tvComfirm.setOnClickListener(new OnClickListener() {
+        tvConfirm = new TextView(context);
+        tvConfirm.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
+        tvConfirm.setText(Language.getLanguage(context).ensureTitle());
+        tvConfirm.setTextColor(Color.WHITE);
+        tvConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mOnDateSelected && null != mCalendarView)
-                    mOnDateSelected.selected(mCalendarView.getDateSelected());
+                if (null != mOnDateSelected && null != monthView)
+                    mOnDateSelected.selected(monthView.getDateSelected());
             }
         });
 
         addView(tvYear, llParams);
         addView(tvMonth, llParams);
-        addView(tvComfirm, llParams);
+        addView(tvConfirm, llParams);
     }
 
-    public void setOnDateSelected(OnDateSelected onDateSelected, CalendarView calendarView) {
+    public void setOnDateSelected(OnDateSelected onDateSelected, MonthView monthView) {
         mOnDateSelected = onDateSelected;
-        mCalendarView = calendarView;
+        this.monthView = monthView;
     }
 
     public void setColor(int color) {
@@ -105,7 +86,7 @@ public class TitleView extends LinearLayout implements CalendarView.OnPageChange
         tvMonth.setPadding(0, padding, 0, padding);
         tvMonth.getPaint().setTextSize(textSizeLarge);
 
-        tvComfirm.setPadding(0, padding, padding, padding);
-        tvComfirm.getPaint().setTextSize(textSizeSmall);
+        tvConfirm.setPadding(0, padding, padding, padding);
+        tvConfirm.getPaint().setTextSize(textSizeSmall);
     }
 }
