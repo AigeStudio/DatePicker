@@ -4,17 +4,20 @@
 # 日历选择器
 灰常灰常简单的Android日历选择器（注：暂不支持横屏操作，农历节气有一到两天的误差）
 ##Android API 版本要求
-**API 1**
+~~API 1~~
+**API 11**
 ##版本迭代
 ###1.0.0 beta
-横屏暂未考虑，竖屏暂未发现问题，项目使用中
+* 横屏暂未考虑，竖屏暂未发现问题，项目使用中
+###1.1.2 release
+* 增加日期选择弹性动画
+* 修复设置主色调时日历区域农历日期颜色不改变BUG
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 ##功能简介
 * 支持多选返回结果
 * 支持主色调定制
 * 农历隐藏
-
 更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 ##如何集成到项目
 ###步骤一
@@ -36,7 +39,6 @@ compile project(':DatePicker')
 ```
 ##如何使用
 一旦将DatePicker集成到项目后你便可以像普通控件那样使用它。
-
 如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelected回调接口：
 ```Java
 mDatePicker = (DatePicker) findViewById(R.id.main_dp);
@@ -51,23 +53,25 @@ mDatePicker.setOnDateSelected(new OnDateSelected() {
 >yyyy-MM-dd
 
 比如：2015-3-28
-
 ***
 **这里开始是英文文档**
 #DatePicker
 A simple date picker for android（note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term）
 ##Android API Needs
-**API 1**
+~~API 1~~
+**API 11**
 ##Version
 ###1.0.0 beta
 Doesn't work with horizontal view yet,but vertical right.
+###1.1.2 release
+* Add animation when date picked.
+* Bugfix:color in lunar doesn't change when main color set.
 ##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 ##Function
 * multiple-pick for date
 * specify primary colour
 * hide lunar display
-
 You can see [IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java) for more help.
 ##How to add to your project
 ###step 1
@@ -89,7 +93,6 @@ compile project(':DatePicker')
 ```
 ##Usage
 Once you add DatePicker to your project you can use it like other views which android define.
-
 You need to set a OnDateSelected callback if you want to obtain dates when dates picked.
 ```Java
 mDatePicker = (DatePicker) findViewById(R.id.main_dp);
@@ -107,13 +110,10 @@ For example:2015-3-28
 ***
 #LICENSE
  Copyright 2014-2015 AigeStudio(https://github.com/AigeStudio)
-
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
-
  http://www.apache.org/licenses/LICENSE-2.0
-
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
