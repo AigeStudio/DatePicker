@@ -110,12 +110,12 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
         this(context, null);
     }
 
-    public MonthView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public MonthView(Context context, AttributeSet attributes) {
+        this(context, attributes, 0);
     }
 
-    public MonthView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public MonthView(Context context, AttributeSet attributes, int defaultStyleAttribute) {
+        super(context, attributes, defaultStyleAttribute));
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
 
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.DEV_KERN_TEXT_FLAG);
