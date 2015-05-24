@@ -28,12 +28,12 @@ public class YearView extends View {
         this(context, null);
     }
 
-    public YearView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public YearView(Context context, AttributeSet attributes) {
+        this(context, attributes, 0);
     }
 
-    public YearView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public YearView(Context context, AttributeSet attributes, int defaultStyleAttribute) {
+        super(context, attributes, defaultStyleAttribute);
 
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
