@@ -3,6 +3,8 @@
 **Here is begin of CN document.**
 # 日历选择器
 灰常灰常简单的Android日历选择器（注：暂不支持横屏操作，农历节气有一到两天的误差）
+##Android API 版本要求
+**API 1**
 ##版本迭代
 ###1.0.0 beta
 横屏暂未考虑，竖屏暂未发现问题，项目使用中
@@ -54,6 +56,8 @@ mDatePicker.setOnDateSelected(new OnDateSelected() {
 **这里开始是英文文档**
 #DatePicker
 A simple date picker for android（note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term）
+##Android API Needs
+**API 1**
 ##Version
 ###1.0.0 beta
 Doesn't work with horizontal view yet,but vertical right.
