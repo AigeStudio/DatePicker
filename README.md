@@ -90,135 +90,89 @@ mDatePicker.setOnDateSelected(new OnDateSelected() {
 A simple date picker for android~~(note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term)~~
 
 ##Android API Needs
-
 ~~API 1~~
 
 **API 11**
 
 ##Version
-
 ###1.0.0 beta
-
-Doesn't work with horizontal view yet,but vertical right.
+* ~~Doesn't work with horizontal view yet,but vertical right.~~
 
 ###1.1.2 release
-
 * Add animation when date picked.
 * Bugfix:color does not change when main color set.
 
-##Preview
+###1.1.3 release
+* You must specify a exactly width like 320dp or match_parent whether portrait or landscape, In most cases the datepicker is use with dialog, an it will match screen in default mode, you can refer to demo to change dialog width.
 
+##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
 ##Function
-
 * multiple-pick for date
-
 * specify primary colour
-
 * hide lunar display
-
-
 
 You can see [IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java) for more help.
 
 ##How to add to your project
-
 ###step 1
-
 import DatePicker lib to your project
 
 ###step 2
-
 Add something like below in your settings.gradle file of project:
 
 ```gradle
-
 include ':DatePicker'
-
 ```
 
 Note that in some other gradle version you many add module like below:
 
 ```gradle
-
 include ':YourMoudle',':DatePicker'
-
 ```
 
 Click 'sycn now' when it appear after module add.
 
 ###step 3
-
 Add something like below in your build.gradle file of project:
 
 ```gradle
-
 compile project(':DatePicker')
-
 ```
 
 ##Usage
-
 Once you add DatePicker to your project you can use it like other views which android define.
-
-
 
 You need to set a OnDateSelected callback if you want to obtain dates when dates picked.
 
 ```Java
-
 mDatePicker = (DatePicker) findViewById(R.id.main_dp);
-
 mDatePicker.setOnDateSelected(new OnDateSelected() {
-
     @Override
-
     public void selected(List<String> date) {
-
         // Get dates here
-
     }
-
 });
-
 ```
 
 The dates you picker will return in the form of string list,format of string like below:
 
 >yyyy-MM-dd
 
-
-
 For example:2015-3-28
 
 ***
 
 #LICENSE
+Copyright 2014-2015 AigeStudio(https://github.com/AigeStudio)
 
- Copyright 2014-2015 AigeStudio(https://github.com/AigeStudio)
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 
+You may obtain a copy of the License at
 
+http://www.apache.org/licenses/LICENSE-2.0
 
- Licensed under the Apache License, Version 2.0 (the "License");
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
- you may not use this file except in compliance with the License.
-
- You may obtain a copy of the License at
-
-
-
- http://www.apache.org/licenses/LICENSE-2.0
-
-
-
- Unless required by applicable law or agreed to in writing, software
-
- distributed under the License is distributed on an "AS IS" BASIS,
-
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
- See the License for the specific language governing permissions and
-
- limitations under the License.
-
+See the License for the specific language governing permissions and limitations under the License.
