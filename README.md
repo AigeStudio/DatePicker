@@ -36,84 +36,58 @@
 更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 
 ##如何集成到项目
-
 ###步骤一
-
 将DatePicker这个Module导入你的Project中
 
 ###步骤二
-
 在你Project的settings.gradle文件中增加如下内容：
 
 ```gradle
-
 include ':DatePicker'
-
 ```
 
 这里要注意的是在一些gradle版本中需要以英文逗号的方式追加Module：
 
 ```gradle
-
 include ':YourMoudle',':DatePicker'
-
 ```
 
 添加后当出现“sycn now”提示时点击同步即可
 
 ###步骤三
-
 在你项目的build.gradle文件的dependencies区域中添加如下内容：
 
 ```gradle
-
 compile project(':DatePicker')
-
 ```
 
 ##如何使用
-
 一旦将DatePicker集成到项目后你便可以像普通控件那样使用它。
-
-
 
 如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelected回调接口：
 
 ```Java
-
 mDatePicker = (DatePicker) findViewById(R.id.main_dp);
-
 mDatePicker.setOnDateSelected(new OnDateSelected() {
-
     @Override
-
     public void selected(List<String> date) {
-
         // date为选择的日期字符串列表
-
     }
-
 });
-
 ```
 
 选择后的日期将会以列表的形式返回，日期字符串的格式为：
 
 >yyyy-MM-dd
 
-
-
 比如：2015-3-28
-
-
 
 ***
 
 **这里开始是英文文档**
 
 #DatePicker
-
-A simple date picker for android（note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term）
+A simple date picker for android~~(note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term)~~
 
 ##Android API Needs
 
