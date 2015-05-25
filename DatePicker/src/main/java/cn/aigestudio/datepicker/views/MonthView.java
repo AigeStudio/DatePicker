@@ -406,31 +406,16 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-
-        int result = 0;
+        int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
 
         String[][] currentGregorian = mCalendarBiz.getGregorianCreated().get(index);
 
-        Configuration newConfig = getResources().getConfiguration();
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            result = Math.max(width, height);
-            if (height > width) {
-                result = height;
-            }
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            result = Math.min(width, height);
-            if (width > height) {
-                result = width;
-            }
-        }
         if (null == currentGregorian[4][0]) {
-            setMeasuredDimension(result, (int) (result * 4 / 7F));
+            setMeasuredDimension(measureWidth, (int) (measureWidth * 4 / 7F));
         } else if (null == currentGregorian[5][0]) {
-            setMeasuredDimension(result, (int) (result * 5 / 7F));
+            setMeasuredDimension(measureWidth, (int) (measureWidth * 5 / 7F));
         } else {
-            setMeasuredDimension(result, (int) (result * 6 / 7F));
+            setMeasuredDimension(measureWidth, (int) (measureWidth * 6 / 7F));
         }
     }
 

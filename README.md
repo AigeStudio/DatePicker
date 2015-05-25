@@ -7,39 +7,27 @@
 **Here is begin of CN document.**
 
 # 日历选择器
-
-灰常灰常简单的Android日历选择器（注：暂不支持横屏操作，农历节气有一到两天的误差）
+灰常灰常简单的Android日历选择器~~（注：暂不支持横屏操作，农历节气有一到两天的误差）~~
 
 ##Android API 版本要求
-
 ~~API 1~~
 
 **API 11**
 
 ##版本迭代
-
 ###1.0.0 beta
-
-* 横屏暂未考虑，竖屏暂未发现问题，项目使用中
-
+* ~~横屏暂未考虑，竖屏暂未发现问题，项目使用中~~
 ###1.1.2 release
-
 * 增加日期选择时弹性动画
 * 修复设置主色调后农历颜色不改变BUG
-
+###1.1.3 release
+* 不管是横屏还是竖屏，你必须总为该控件指定一个确切宽度比如320dp或者填充父布局，大多数情况下该日期选择器都是在dialog中使用，默认dialog宽度是填充屏幕宽度的，你可以参照Demo来更改diaolog的宽度。
 ##预览图
-
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
-
 ##功能简介
-
 * 支持多选返回结果
-
 * 支持主色调定制
-
 * 农历隐藏
-
-
 
 更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 

@@ -10,6 +10,9 @@ import android.view.View;
 
 /**
  * 年视图
+ * 该部分功能将会在2.0.0之前被启用
+ * View of years
+ * The part of this will be available before 2.0.0
  *
  * @author AigeStudio 2015-05-21
  */
