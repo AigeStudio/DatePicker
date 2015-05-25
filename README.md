@@ -103,7 +103,7 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 * Bugfix:color does not change when main color set.
 
 ###1.1.3 release
-* You must specify a exactly width like 320dp or match_parent whether portrait or landscape, In most cases the datepicker is use with dialog, an it will match screen in default mode, you can refer to demo to change dialog width.
+* You must specify a exactly width like 320dp or match_parent whether portrait or landscape, In most cases the datepicker is use with dialog, and it will match screen in default mode, you can refer to demo to change dialog width.
 
 ##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
