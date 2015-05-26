@@ -122,10 +122,16 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 You can see [IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java) for more help.
 
 ##How to add to your project
-###step 1
+###Method A:compile from maven center
+```gradle
+compile 'cn.aigestudio.datepicker:DatePicker:1.1.3'
+```
+
+###Method B:Help yourself
+####step 1
 import DatePicker lib to your project
 
-###step 2
+####step 2
 Add something like below in your settings.gradle file of project:
 
 ```gradle
@@ -140,7 +146,7 @@ include ':YourMoudle',':DatePicker'
 
 Click 'sycn now' when it appear after module add.
 
-###step 3
+####step 3
 Add something like below in your build.gradle file of project:
 
 ```gradle
