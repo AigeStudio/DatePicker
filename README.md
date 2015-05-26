@@ -36,10 +36,16 @@
 更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 
 ##如何集成到项目
-###步骤一
+###方式一 直接从maven center compile
+```gradle
+compile 'cn.aigestudio.datepicker:DatePicker:1.1.3'
+```
+
+###方式二 手动导入
+####步骤一
 将DatePicker这个Module导入你的Project中
 
-###步骤二
+####步骤二
 在你Project的settings.gradle文件中增加如下内容：
 
 ```gradle
@@ -54,7 +60,7 @@ include ':YourMoudle',':DatePicker'
 
 添加后当出现“sycn now”提示时点击同步即可
 
-###步骤三
+####步骤三
 在你项目的build.gradle文件的dependencies区域中添加如下内容：
 
 ```gradle
