@@ -21,8 +21,8 @@ public class DatePicker extends LinearLayout implements IPick {
         this(context, null);
     }
 
-    public DatePicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public DatePicker(Context context, AttributeSet attributes) {
+        super(context, attributes);
         setBackgroundColor(Color.WHITE);
         setOrientation(VERTICAL);
 
