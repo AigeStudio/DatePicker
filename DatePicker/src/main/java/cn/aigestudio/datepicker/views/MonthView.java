@@ -380,59 +380,6 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
                     final String date = currentYear + "-" + currentMonth + "-" + mCalendarBiz.getGregorianCreated().get(index)[i][j];
 
                     dateSelect(region, date);
-
-//                    if (dateSelected.contains(date)) {
-//                        dateSelected.remove(date);
-//
-//                        BGCircle circle = circlesAppear.get(date);
-//
-//                        ValueAnimator animScale = ObjectAnimator.ofInt(circle, "radius", circleRadius, 0);
-//                        animScale.setDuration(250);
-//                        animScale.setInterpolator(new AccelerateInterpolator());
-//                        animScale.addUpdateListener(this);
-//                        animScale.addListener(new AnimatorListenerAdapter() {
-//                            @Override
-//                            public void onAnimationEnd(Animator animation) {
-//                                circlesDisappear.remove(date);
-//                            }
-//                        });
-//                        animScale.start();
-//
-//                        circlesDisappear.put(date, circle);
-//
-//                        circlesAppear.remove(date);
-//                    } else {
-//                        dateSelected.add(date);
-//
-//                        BGCircle circle = createCircle(region.getBounds().centerX() + index * sizeBase, region.getBounds().centerY());
-//
-//                        ValueAnimator animScale1 = ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
-//                        animScale1.setDuration(250);
-//                        animScale1.setInterpolator(new DecelerateInterpolator());
-//                        animScale1.addUpdateListener(this);
-//
-//                        ValueAnimator animScale2 = ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
-//                        animScale2.setDuration(100);
-//                        animScale2.setInterpolator(new AccelerateInterpolator());
-//                        animScale2.addUpdateListener(this);
-//
-//                        ValueAnimator animScale3 = ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
-//                        animScale3.setDuration(150);
-//                        animScale3.setInterpolator(new DecelerateInterpolator());
-//                        animScale3.addUpdateListener(this);
-//
-//                        ValueAnimator animScale4 = ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
-//                        animScale4.setDuration(50);
-//                        animScale4.setInterpolator(new AccelerateInterpolator());
-//                        animScale4.addUpdateListener(this);
-//
-//                        AnimatorSet animSet = new AnimatorSet();
-//                        animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
-//
-//                        animSet.start();
-//
-//                        circlesAppear.put(date, circle);
-//                    }
                 }
             }
         }
