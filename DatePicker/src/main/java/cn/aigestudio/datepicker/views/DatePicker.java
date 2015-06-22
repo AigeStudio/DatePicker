@@ -42,6 +42,18 @@ public class DatePicker extends LinearLayout implements IPick {
         titleView.setOnDateSelected(onDateSelected, monthView);
     }
 
+    /**
+     * 监听选择的日期发生变化
+     * @param onDateSelected
+     */
+    public void setOnDateChanged(OnDateSelected onDateSelected) {
+        monthView.setOnDateChanged(onDateSelected);
+    }
+
+    public void hideEnsureButton() {
+        titleView.hideEnsureButton();
+    }
+
     @Override
     public void setColor(int color) {
         titleView.setColor(color);
@@ -51,5 +63,9 @@ public class DatePicker extends LinearLayout implements IPick {
     @Override
     public void isLunarDisplay(boolean display) {
         monthView.setLunarShow(display);
+    }
+
+    public void setSingleMonth(boolean t) {
+        monthView.setSingleSelected(t);
     }
 }

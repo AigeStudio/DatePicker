@@ -29,6 +29,7 @@ import java.util.Map;
 
 import cn.aigestudio.datepicker.bizs.CalendarBiz;
 import cn.aigestudio.datepicker.entities.BGCircle;
+import cn.aigestudio.datepicker.interfaces.OnDateSelected;
 
 /**
  * 月视图
@@ -69,6 +70,7 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
     private Map<String, BGCircle> circlesAppear = new HashMap<>();
     private Map<String, BGCircle> circlesDisappear = new HashMap<>();
     private List<String> dateSelected = new ArrayList<>();
+    private OnDateSelected mOnDateSelected;
 
     private enum EventType {
         SINGLE, MULTIPLE
@@ -133,6 +135,18 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
         mCalendarBiz = new CalendarBiz(index, currentYear, currentMonth);
 
         buildCalendarRegion();
+    }
+
+    /**
+     * 设置日期是多选还是单选
+     * @param t
+     */
+    public void setSingleSelected(boolean t) {
+        if (t) {
+            mEventType = EventType.SINGLE;
+        } else {
+            mEventType = EventType.MULTIPLE;
+        }
     }
 
     /**
@@ -249,6 +263,104 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
         return circle1;
     }
 
+    /**
+     * 点击选择日期后，添加或者删除
+     * @param region
+     * @param date
+     */
+    private void dateSelect(Region region, final String date) {
+        if (mEventType == EventType.SINGLE) {
+            int size = dateSelected.size();
+            if (!dateSelected.contains(date)) {
+                for (int i = 0; i < size; i++) {
+                    removeDateSelected(region, dateSelected.get(i));
+                }
+                addDateSelected(region, date);
+            } else {
+                for (int i = 0; i < size; i++) {
+                    String nDate = dateSelected.get(i);
+                    if (nDate.equals(date)) {
+                        continue;
+                    }
+                    removeDateSelected(region, nDate);
+                }
+            }
+        } else {
+            if (dateSelected.contains(date)) {
+                removeDateSelected(region, date);
+            } else {
+                addDateSelected(region, date);
+            }
+        }
+    }
+
+    /**
+     * 删除一个已经选择的日期
+     * @param region
+     * @param date
+     */
+    private void removeDateSelected(Region region, final String date) {
+        if (dateSelected.contains(date)) {
+            dateSelected.remove(date);
+
+            BGCircle circle = circlesAppear.get(date);
+
+            ValueAnimator animScale = ObjectAnimator.ofInt(circle, "radius", circleRadius, 0);
+            animScale.setDuration(250);
+            animScale.setInterpolator(new AccelerateInterpolator());
+            animScale.addUpdateListener(this);
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    circlesDisappear.remove(date);
+                }
+            });
+            animScale.start();
+
+            circlesDisappear.put(date, circle);
+
+            circlesAppear.remove(date);
+        }
+    }
+
+    /**
+     * 添加日期到选择的列表里面
+     * @param region
+     * @param date
+     */
+    private void addDateSelected(Region region, final String date) {
+        dateSelected.add(date);
+
+        BGCircle circle = createCircle(region.getBounds().centerX() + index * sizeBase, region.getBounds().centerY());
+
+        ValueAnimator animScale1 = ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
+        animScale1.setDuration(250);
+        animScale1.setInterpolator(new DecelerateInterpolator());
+        animScale1.addUpdateListener(this);
+
+        ValueAnimator animScale2 = ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
+        animScale2.setDuration(100);
+        animScale2.setInterpolator(new AccelerateInterpolator());
+        animScale2.addUpdateListener(this);
+
+        ValueAnimator animScale3 = ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
+        animScale3.setDuration(150);
+        animScale3.setInterpolator(new DecelerateInterpolator());
+        animScale3.addUpdateListener(this);
+
+        ValueAnimator animScale4 = ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
+        animScale4.setDuration(50);
+        animScale4.setInterpolator(new AccelerateInterpolator());
+        animScale4.addUpdateListener(this);
+
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
+
+        animSet.start();
+
+        circlesAppear.put(date, circle);
+    }
+
     private void defineContainRegion(int x, int y) {
         for (int i = 0; i < mRegion.length; i++) {
             for (int j = 0; j < mRegion[i].length; j++) {
@@ -267,58 +379,60 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
                     }
                     final String date = currentYear + "-" + currentMonth + "-" + mCalendarBiz.getGregorianCreated().get(index)[i][j];
 
-                    if (dateSelected.contains(date)) {
-                        dateSelected.remove(date);
+                    dateSelect(region, date);
 
-                        BGCircle circle = circlesAppear.get(date);
-
-                        ValueAnimator animScale = ObjectAnimator.ofInt(circle, "radius", circleRadius, 0);
-                        animScale.setDuration(250);
-                        animScale.setInterpolator(new AccelerateInterpolator());
-                        animScale.addUpdateListener(this);
-                        animScale.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                circlesDisappear.remove(date);
-                            }
-                        });
-                        animScale.start();
-
-                        circlesDisappear.put(date, circle);
-
-                        circlesAppear.remove(date);
-                    } else {
-                        dateSelected.add(date);
-
-                        BGCircle circle = createCircle(region.getBounds().centerX() + index * sizeBase, region.getBounds().centerY());
-
-                        ValueAnimator animScale1 = ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
-                        animScale1.setDuration(250);
-                        animScale1.setInterpolator(new DecelerateInterpolator());
-                        animScale1.addUpdateListener(this);
-
-                        ValueAnimator animScale2 = ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
-                        animScale2.setDuration(100);
-                        animScale2.setInterpolator(new AccelerateInterpolator());
-                        animScale2.addUpdateListener(this);
-
-                        ValueAnimator animScale3 = ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
-                        animScale3.setDuration(150);
-                        animScale3.setInterpolator(new DecelerateInterpolator());
-                        animScale3.addUpdateListener(this);
-
-                        ValueAnimator animScale4 = ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
-                        animScale4.setDuration(50);
-                        animScale4.setInterpolator(new AccelerateInterpolator());
-                        animScale4.addUpdateListener(this);
-
-                        AnimatorSet animSet = new AnimatorSet();
-                        animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
-
-                        animSet.start();
-
-                        circlesAppear.put(date, circle);
-                    }
+//                    if (dateSelected.contains(date)) {
+//                        dateSelected.remove(date);
+//
+//                        BGCircle circle = circlesAppear.get(date);
+//
+//                        ValueAnimator animScale = ObjectAnimator.ofInt(circle, "radius", circleRadius, 0);
+//                        animScale.setDuration(250);
+//                        animScale.setInterpolator(new AccelerateInterpolator());
+//                        animScale.addUpdateListener(this);
+//                        animScale.addListener(new AnimatorListenerAdapter() {
+//                            @Override
+//                            public void onAnimationEnd(Animator animation) {
+//                                circlesDisappear.remove(date);
+//                            }
+//                        });
+//                        animScale.start();
+//
+//                        circlesDisappear.put(date, circle);
+//
+//                        circlesAppear.remove(date);
+//                    } else {
+//                        dateSelected.add(date);
+//
+//                        BGCircle circle = createCircle(region.getBounds().centerX() + index * sizeBase, region.getBounds().centerY());
+//
+//                        ValueAnimator animScale1 = ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
+//                        animScale1.setDuration(250);
+//                        animScale1.setInterpolator(new DecelerateInterpolator());
+//                        animScale1.addUpdateListener(this);
+//
+//                        ValueAnimator animScale2 = ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
+//                        animScale2.setDuration(100);
+//                        animScale2.setInterpolator(new AccelerateInterpolator());
+//                        animScale2.addUpdateListener(this);
+//
+//                        ValueAnimator animScale3 = ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
+//                        animScale3.setDuration(150);
+//                        animScale3.setInterpolator(new DecelerateInterpolator());
+//                        animScale3.addUpdateListener(this);
+//
+//                        ValueAnimator animScale4 = ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
+//                        animScale4.setDuration(50);
+//                        animScale4.setInterpolator(new AccelerateInterpolator());
+//                        animScale4.addUpdateListener(this);
+//
+//                        AnimatorSet animSet = new AnimatorSet();
+//                        animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
+//
+//                        animSet.start();
+//
+//                        circlesAppear.put(date, circle);
+//                    }
                 }
             }
         }
@@ -388,6 +502,10 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
                     }
                 } else {
                     defineContainRegion((int) event.getX(), (int) event.getY());
+                    // 调用外部设置的监听器
+                    if (mOnDateSelected != null) {
+                        mOnDateSelected.selected(dateSelected);
+                    }
                 }
                 break;
         }
@@ -541,5 +659,9 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
         }
         mCalendarBiz.getGregorianCreated().put(current, gregorianCurrent);
         canvas.restore();
+    }
+
+    public void setOnDateChanged(OnDateSelected onDateSelected) {
+        mOnDateSelected = onDateSelected;
     }
 }
