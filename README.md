@@ -27,12 +27,11 @@
 ###1.1.3 release
 * 不管是横屏还是竖屏，你必须总为该控件指定一个确切宽度比如320dp或者填充父布局，大多数情况下该日期选择器都是在dialog中使用，默认dialog宽度是填充屏幕宽度的，你可以参照Demo来更改diaolog的宽度。
 
-###2.0.0 release LTS 暂未上传
+###2.0.0 stable LTS
 * API版本支持到1，对于大于等于API11的版本支持动画显示
 * 增加呼声很高的单选模式支持 目前支持两种模式 单选和多选
 * 增加周次标题的显示
 * 支持上下滑动切换年份 左右滑动切换月份
-* 将原来的可变高度调整为定高
 * 节日文本显示从单行调整为两行
 * 调整UI色调符合material design
 * 对于天朝月历，增加假期、补休的标识
@@ -40,20 +39,17 @@
 * 支持默认年月设定
 * 在现有月视图的基础上分割出五个区域提供自定义装饰物的绘制
 * 在现有月视图的基础上分割出一个背景层提供背景装饰物的绘制
-* 支持多国语言根据当前系统语言环境自动切换
+* 内置中文和英语两种语言，根据当前系统语言环境自动切换
 * 支持自定义国家语言扩展
-* 支持多国假期节日显示标识
+* 内置中国和美国两国节假日显示
 * 支持多国假期节日显示扩展
 * 增强主题色调扩展定制更易于操作
-* 优化天朝农历和节气算法
+* 优化天朝农历和节气算法 农历显示范围从1900-2100
 * 优化代码逻辑提升执行效率
 * 该版本后不再作重大更新
 
-
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
-
-更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 
 ##如何集成到项目
 ###方式一 直接从maven center compile
@@ -88,6 +84,7 @@ compile project(':DatePicker')
 ```
 
 ##如何使用
+###简单使用
 一旦将DatePicker集成到项目后你便可以像普通控件那样使用它。
 
 如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelected回调接口：
