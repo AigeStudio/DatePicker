@@ -36,7 +36,6 @@
 * 调整UI色调符合material design
 * 对于天朝月历，增加假期、补休的标识
 * 增加呼声很高的对今天日期的标识
-* 增加标题栏坐标按钮显示，点击后直接跳转回今天所在的年月
 * 支持默认年月设定
 * 在现有月视图的基础上分割出五个区域提供自定义装饰物的绘制
 * 在现有月视图的基础上分割出一个背景层提供背景装饰物的绘制
@@ -46,17 +45,12 @@
 * 支持多国假期节日显示扩展
 * 增强主题色调扩展定制更易于操作
 * 优化天朝农历和节气算法
-* 优化代码逻辑提升效率
+* 优化代码逻辑提升执行效率
 * 该版本后不再作重大更新
 
 
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
-
-##功能简介
-* 支持多选返回结果
-* 支持主色调定制
-* 农历隐藏
 
 更多的功能方法可查看[IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java)
 
