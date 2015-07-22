@@ -40,7 +40,7 @@ import cn.aigestudio.datepicker.views.DatePicker;
  * @author AigeStudio 2015-03-26
  */
 public class MainActivity extends Activity {
-    private DatePicker mDatePicker;
+    private DatePicker mDatePicker, mDPNoTitle;
     private Button btnPick;
 
     @Override
@@ -51,14 +51,34 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mDatePicker = (DatePicker) findViewById(R.id.main_dp);
+        mDatePicker.setSingleMonth(true);
         mDatePicker.setOnDateSelected(new OnDateSelected() {
             @Override
             public void selected(List<String> date) {
-                for (String s : date) {
-                    LogUtil.v(s);
-                }
+                Toast.makeText(MainActivity.this, date.toString(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
+        mDatePicker.setOnDateChanged(new OnDateSelected() {
+            @Override
+            public void selected(List<String> date) {
+                Toast.makeText(MainActivity.this, date.toString(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /* 隐藏确定按钮
+        mDPNoTitle = (DatePicker) findViewById(R.id.picker_no_title);
+        mDPNoTitle.hideEnsureButton();
+        mDPNoTitle.setSingleMonth(true);
+        mDPNoTitle.setOnDateChanged(new OnDateSelected() {
+            @Override
+            public void selected(List<String> date) {
+                Toast.makeText(MainActivity.this, date.toString(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        */
 
         btnPick = (Button) findViewById(R.id.main_btn);
         btnPick.setOnClickListener(new View.OnClickListener() {

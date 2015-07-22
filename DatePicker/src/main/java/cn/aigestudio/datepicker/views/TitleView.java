@@ -89,4 +89,11 @@ public class TitleView extends LinearLayout implements MonthView.OnPageChangeLis
         tvConfirm.setPadding(0, padding, padding, padding);
         tvConfirm.getPaint().setTextSize(textSizeSmall);
     }
+
+    /**
+     * 隐藏确定按钮
+     */
+    public void hideEnsureButton() {
+        tvConfirm.setVisibility(View.INVISIBLE);
+    }
 }

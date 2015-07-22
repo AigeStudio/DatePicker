@@ -1,9 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
               android:orientation="vertical"
               tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Single date picker:"
+        android:textSize="16sp"
+        android:layout_margin="5dp"
+        android:textStyle="bold" />
 
     <cn.aigestudio.datepicker.views.DatePicker
         android:id="@+id/main_dp"
@@ -14,6 +22,6 @@
         android:id="@+id/main_btn"
         android:layout_width="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Pick date"
+        android:text="Multiple date picker"
         android:layout_height="wrap_content"/>
 </LinearLayout>
