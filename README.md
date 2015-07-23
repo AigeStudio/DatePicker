@@ -112,7 +112,7 @@ picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
 
 setDate方法允许你设置当前月历显示的年月。***注意该方法必须调用，也就是说你必须为DatePicker指定一个确切年月***
 
-默认情况下DatePicker的选择模式为多选模式，你可以通过setMode方法来设置DatePicker的选择模式，该方法接受一个DPMode类型的枚举值，目前为止DatePicker支持两种选择模式：单选DPMode.SINGLE和多选DPMode.MULTIPLE，设置方式如下：
+默认情况下DatePicker 2.0的选择模式为多选模式，你可以通过setMode方法来设置DatePicker的选择模式，该方法接受一个DPMode类型的枚举值，DatePicker 2.0支持两种选择模式：单选DPMode.SINGLE和多选DPMode.MULTIPLE，设置方式如下：
 
 ```Java
 ......
@@ -147,7 +147,7 @@ picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
 比如：2015-3-28
 
 ###高级定制
-DatePicker默认了一套显示机制，对于天朝月历而言，2015年的假期与补休都会被不同的背景圆颜色所标识，对于其他国家月历而言只有假期会被标识，当然，在某些情况下你还想在某些特定的日期有自己的显示标识，DatePicker在原有绘制层的基础上分割出了一个背景层，提供给用户绘制自己想要的标识物。比如你想在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个不同的背景圆，首先你要通过DPCManager的setDecorBG方法设置一个日期列表，该列表包含了需要绘制背景标识的日期（在没有特殊说明的情况下，DatePicker中所使用到的日期格式均与上述一致）：
+DatePicker 2.0默认了一套显示机制，对于天朝月历而言，2015年的假期与补休都会被不同的背景圆颜色所标识，对于其他国家月历而言只有假期会被标识，当然，在某些情况下你还想在某些特定的日期有自己的显示标识，DatePicker 2.0在原有绘制层的基础上分割出了一个背景层，提供给用户绘制自己想要的标识物。比如你想在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个不同的背景圆，首先你要通过DPCManager的setDecorBG方法设置一个日期列表，该列表包含了需要绘制背景标识的日期（在没有特殊说明的情况下，DatePicker 2.0中所使用到的日期格式均与上述一致）：
 
 ```Java
 ......
@@ -185,7 +185,11 @@ picker.setDPDecor(new DPDecor() {
 
 ![](https://github.com/AigeStudio/DatePicker/blob/master/BG.jpg)
 
+DatePicker 2.0中所提供的背景层位于日期文本的下方所有其他背景的上方，也就是说在所有的背景层中，你所自定义的背景拥有最高展示的优先级
 
+当然，有些情况下光是绘制一个背景层往往不是不够的，DatePicker 2.0充分考虑到这一点，开放了位于前景层的五个装饰区域给用户绘制不同的装饰物，这五个装饰区域的位置大致如下：
+
+![](https://github.com/AigeStudio/DatePicker/blob/master/Decor.jpg)
 
 ***这里非常重要的一点是你必须在DatePicker显示前设置***
 
