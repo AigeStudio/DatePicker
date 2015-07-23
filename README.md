@@ -52,9 +52,9 @@
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
 ##如何集成到项目
-###方式一 直接从maven center compile
+###方式一 直接从maven center compile 审核中...
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:1.1.3'
+compile 'cn.aigestudio.datepicker:DatePicker:2.0.0'
 ```
 
 ###方式二 手动导入
