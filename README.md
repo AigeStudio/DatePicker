@@ -54,7 +54,7 @@
 因为Gif压缩问题导致预览图看起来有点卡，运行没问题
 
 ##如何集成到项目
-###方式一 直接从maven center compile 审核中...
+###方式一 直接从maven center compile
 ```gradle
 compile 'cn.aigestudio.datepicker:DatePicker:2.0.0'
 ```
