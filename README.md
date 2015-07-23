@@ -191,7 +191,69 @@ DatePicker 2.0中所提供的背景层位于日期文本的下方所有其他背
 
 ![](https://github.com/AigeStudio/DatePicker/blob/master/Decor.jpg)
 
-***这里非常重要的一点是你必须在DatePicker显示前设置***
+如上图所示，DatePicker 2.0开放了位于前景层的A、B、C、D、E五个区域让用于有机会在这些前景层的这些区域绘制一些装饰物，使用方法也非常简单，与绘制背景装饰物的逻辑类似，这里以分别在2015-7-5，2015-7-10这两个日期的左上和又上角绘制不同颜色形状的图形为例，首先你需要做的第一步与绘制背景装饰物一样，先调用DPCManager的相关方法初始化日期数据：
+
+```Java
+......
+List<String> tmpTL = new ArrayList<>();
+tmpTL.add("2015-7-5");
+DPCManager.getInstance().setDecorTL(tmpTL);
+
+List<String> tmpTR = new ArrayList<>();
+tmpTR.add("2015-7-10");
+DPCManager.getInstance().setDecorTR(tmpTR);
+......
+```
+
+这里补充一点，从上面装饰区域的示例图中其实可以看到A、B、C、D、E五个区域分别表示的是左上角（Top left）、顶部（Top）、右上角（Top right）、左边（Left）、右边（Right），与之对应的设置日期数据与绘制的方法也采用不同的命名来区分，比如上面的代码中我们为左上角TL和右上角TR设置标识日期数据就分别用到了setDecorTL方法和setDecorTR方法，当然，在绘制的时候我们也需要在相应的方法中绘制：
+
+```Java
+......
+List<String> tmpTL = new ArrayList<>();
+tmpTL.add("2015-7-5");
+DPCManager.getInstance().setDecorTL(tmpTL);
+
+List<String> tmpTR = new ArrayList<>();
+tmpTR.add("2015-7-10");
+DPCManager.getInstance().setDecorTR(tmpTR);
+
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setDPDecor(new DPDecor() {
+    @Override
+    public void drawDecorTL(Canvas canvas, Rect rect, Paint paint) {
+        paint.setColor(Color.GREEN);
+        canvas.drawRect(rect, paint);
+    }
+
+    @Override
+    public void drawDecorTR(Canvas canvas, Rect rect, Paint paint) {
+        paint.setColor(Color.BLUE);
+        canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2, paint);
+    }
+});
+picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+    @Override
+    public void onDateSelected(List<String> date) {
+        String result = "";
+        Iterator iterator = date.iterator();
+        while (iterator.hasNext()) {
+            result += iterator.next();
+            if (iterator.hasNext()) {
+                result += "\n";
+            }
+        }
+        Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+    }
+});
+......
+```
+
+绘制效果如下：
+
+![](https://github.com/AigeStudio/DatePicker/blob/master/DecorExample.jpg)
+
+***注意！！！这里非常重要的一点是你必须在DatePicker显示前设置DPCManager中的相关数据！！！***
 
 ***
 
