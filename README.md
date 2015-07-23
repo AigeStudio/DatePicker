@@ -125,7 +125,6 @@ picker.setMode(DPMode.SINGLE);
 DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
 picker.setDate(2015, 7);
 picker.setMode(DPMode.SINGLE);
-picker.setMode(DPMode.SINGLE);
 picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
     @Override
     public void onDatePicked(String date) {
@@ -141,6 +140,9 @@ picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
 >yyyy-M-d
 
 比如：2015-3-28
+
+###高级定制
+DatePicker默认了一套显示机制，对于天朝月历而言，2015年的假期与补休都会被不同的背景圆颜色所标识，对于其他国家月历而言只有假期会被标识，当然，在某些情况下你还想在某些特定的日期有自己的显示标识，DatePicker在原有绘制层的基础上分割出了一个背景层，提供给用户绘制自己想要的标识物。比如你想在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个不同的背景圆，首先你要通过
 
 ***
 
