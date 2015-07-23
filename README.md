@@ -90,6 +90,7 @@ compile project(':DatePicker')
 如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelectedListener监听器：
 
 ```Java
+......
 DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
 picker.setDate(2015, 7);
 picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
@@ -106,6 +107,7 @@ picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
         Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
     }
 });
+......
 ```
 
 setDate方法允许你设置当前月历显示的年月。***注意该方法必须调用，也就是说你必须为DatePicker指定一个确切年月***
@@ -113,6 +115,7 @@ setDate方法允许你设置当前月历显示的年月。***注意该方法必�
 默认情况下DatePicker的选择模式为多选模式，你可以通过setMode方法来设置DatePicker的选择模式，该方法接受一个DPMode类型的枚举值，目前为止DatePicker支持两种选择模式：单选DPMode.SINGLE和多选DPMode.MULTIPLE，设置方式如下：
 
 ```Java
+......
 DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
 picker.setDate(2015, 7);
 picker.setMode(DPMode.SINGLE);
@@ -122,6 +125,7 @@ picker.setMode(DPMode.SINGLE);
 在单选模式下，如果你想要获取DatePicker日期选择后返回的数据，你就不能再将DatePicker的监听设置为OnDateSelectedListener而应该设置为OnDatePickedListener：
 
 ```Java
+......
 DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
 picker.setDate(2015, 7);
 picker.setMode(DPMode.SINGLE);
@@ -131,6 +135,7 @@ picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
         Toast.makeText(MainActivity.this, date, Toast.LENGTH_LONG).show();
     }
 });
+......
 ```
 
 ***这里需要注意的是，你不能将DatePicker设置为多选或单选模式的情况下又设置为单选或多选，在一个实例中只能接受一种选择模式***
@@ -142,7 +147,47 @@ picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
 比如：2015-3-28
 
 ###高级定制
-DatePicker默认了一套显示机制，对于天朝月历而言，2015年的假期与补休都会被不同的背景圆颜色所标识，对于其他国家月历而言只有假期会被标识，当然，在某些情况下你还想在某些特定的日期有自己的显示标识，DatePicker在原有绘制层的基础上分割出了一个背景层，提供给用户绘制自己想要的标识物。比如你想在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个不同的背景圆，首先你要通过
+DatePicker默认了一套显示机制，对于天朝月历而言，2015年的假期与补休都会被不同的背景圆颜色所标识，对于其他国家月历而言只有假期会被标识，当然，在某些情况下你还想在某些特定的日期有自己的显示标识，DatePicker在原有绘制层的基础上分割出了一个背景层，提供给用户绘制自己想要的标识物。比如你想在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个不同的背景圆，首先你要通过DPCManager的setDecorBG方法设置一个日期列表，该列表包含了需要绘制背景标识的日期（在没有特殊说明的情况下，DatePicker中所使用到的日期格式均与上述一致）：
+
+```Java
+......
+List<String> tmp = new ArrayList<>();
+tmp.add("2015-7-1");
+tmp.add("2015-7-8");
+tmp.add("2015-7-16");
+DPCManager.getInstance().setDecorBG(tmp);
+......
+```
+
+然后你就可以调用DatePicker的setDPDecor方法为DatePicker绘制装饰物背景：
+
+```Java
+......
+List<String> tmp = new ArrayList<>();
+tmp.add("2015-7-1");
+tmp.add("2015-7-8");
+tmp.add("2015-7-16");
+DPCManager.getInstance().setDecorBG(tmp);
+
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setDPDecor(new DPDecor() {
+    @Override
+    public void drawDecorBG(Canvas canvas, Rect rect, Paint paint) {
+        paint.setColor(Color.RED);
+        canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2F, paint);
+    }
+});
+......
+```
+
+这里我们在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个红色的背景圆：
+
+![](https://github.com/AigeStudio/DatePicker/blob/master/BG.jpg)
+
+
+
+***这里非常重要的一点是你必须在DatePicker显示前设置***
 
 ***
 
