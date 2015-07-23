@@ -255,6 +255,32 @@ picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
 
 ***注意！！！这里非常重要的一点是你必须在DatePicker显示前设置DPCManager中的相关数据！！！***
 
+###功能扩展
+DatePicker 2.0提供了三个Manager来管理控件的各项功能，其中DPCManager用于对日期数据的加载，这在上面的介绍中有所提及这里不再多说；DPLManager用于对语言环境的控制，DatePicker 2.0内置中文和英语两种语言并会根据当前系统的语言环境进行自动切换，如果你想扩展更多的语言，只需继承DPLManager并重写相关方法即可，同时你还必须在DPLManager的单例方法中增加相关逻辑以便DatePicker能识别你的语言：
+
+```Java
+    /**
+     * 获取日历语言管理器
+     * 
+     * Get DatePicker language manager
+     *
+     * @return 日历语言管理器 DatePicker language manager
+     */
+    public static DPLManager getInstance() {
+        if (null == sLanguage) {
+            String locale = Locale.getDefault().getLanguage().toLowerCase();
+            if (locale.equals("zh")) {
+                sLanguage = new CN();
+            } else {
+                sLanguage = new EN();
+            }
+        }
+        return sLanguage;
+    }
+```
+
+最后我们还提供了一个DPTManager用于对DatePicker整体色调的控制，如果你想实现自己的主题色调，只需继承DPTheme并实现相关方法，然后再调用DPTManager的initCalendar方法传入你自定义的DPTheme对象即可。***这里与DPCManager不同的是主题的初始化（也就是说DPTManager的initCalendar方法的调用）必须在DatePicker构造前完成！！！这点与DPCManager在DatePicker显示前调用不同！！！***
+
 ***
 
 **这里开始是英文文档**
