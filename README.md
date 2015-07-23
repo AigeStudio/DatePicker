@@ -27,7 +27,7 @@
 ###1.1.3 release
 * 不管是横屏还是竖屏，你必须总为该控件指定一个确切宽度比如320dp或者填充父布局，大多数情况下该日期选择器都是在dialog中使用，默认dialog宽度是填充屏幕宽度的，你可以参照Demo来更改diaolog的宽度。
 
-###2.0.0 stable LTS
+###2.0.0 stable LTS 暂未发布
 * API版本支持到1，对于大于等于API11的版本支持动画显示
 * 增加呼声很高的单选模式支持 目前支持两种模式 单选和多选
 * 增加周次标题的显示
@@ -87,21 +87,58 @@ compile project(':DatePicker')
 ###简单使用
 一旦将DatePicker集成到项目后你便可以像普通控件那样使用它。
 
-如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelected回调接口：
+如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelectedListener监听器：
 
 ```Java
-mDatePicker = (DatePicker) findViewById(R.id.main_dp);
-mDatePicker.setOnDateSelected(new OnDateSelected() {
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
     @Override
-    public void selected(List<String> date) {
-        // date为选择的日期字符串列表
+    public void onDateSelected(List<String> date) {
+        String result = "";
+        Iterator iterator = date.iterator();
+        while (iterator.hasNext()) {
+            result += iterator.next();
+            if (iterator.hasNext()) {
+                result += "\n";
+            }
+        }
+        Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
     }
 });
 ```
 
-选择后的日期将会以列表的形式返回，日期字符串的格式为：
+setDate方法允许你设置当前月历显示的年月。***注意该方法必须调用，也就是说你必须为DatePicker指定一个确切年月***
 
->yyyy-MM-dd
+默认情况下DatePicker的选择模式为多选模式，你可以通过setMode方法来设置DatePicker的选择模式，该方法接受一个DPMode类型的枚举值，目前为止DatePicker支持两种选择模式：单选DPMode.SINGLE和多选DPMode.MULTIPLE，设置方式如下：
+
+```Java
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setMode(DPMode.SINGLE);
+......
+```
+
+在单选模式下，如果你想要获取DatePicker日期选择后返回的数据，你就不能再将DatePicker的监听设置为OnDateSelectedListener而应该设置为OnDatePickedListener：
+
+```Java
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setMode(DPMode.SINGLE);
+picker.setMode(DPMode.SINGLE);
+picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
+    @Override
+    public void onDatePicked(String date) {
+        Toast.makeText(MainActivity.this, date, Toast.LENGTH_LONG).show();
+    }
+});
+```
+
+***这里需要注意的是，你不能将DatePicker设置为多选或单选模式的情况下又设置为单选或多选，在一个实例中只能接受一种选择模式***
+
+选择后的日期将会以列表（多选模式下）或字符串（单选模式下）的形式返回，日期字符串的格式为：
+
+>yyyy-M-d
 
 比如：2015-3-28
 
