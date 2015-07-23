@@ -27,7 +27,7 @@
 ###1.1.3 release
 * 不管是横屏还是竖屏，你必须总为该控件指定一个确切宽度比如320dp或者填充父布局，大多数情况下该日期选择器都是在dialog中使用，默认dialog宽度是填充屏幕宽度的，你可以参照Demo来更改diaolog的宽度。
 
-###2.0.0 stable LTS 暂未发布
+###2.0.0 stable LTS
 * API版本支持到1，对于大于等于API11的版本支持动画显示
 * 增加呼声很高的单选模式支持 目前支持两种模式 单选和多选
 * 增加周次标题的显示
@@ -50,6 +50,8 @@
 
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
+
+因为Gif压缩问题导致预览图看起来有点卡，运行没问题
 
 ##如何集成到项目
 ###方式一 直接从maven center compile 审核中...
