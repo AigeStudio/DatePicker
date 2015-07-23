@@ -5,16 +5,17 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.text.TextPaint;
-import android.util.AttributeSet;
+import android.os.Build;
+import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -22,376 +23,90 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.aigestudio.datepicker.bizs.CalendarBiz;
-import cn.aigestudio.datepicker.entities.BGCircle;
+import cn.aigestudio.datepicker.bizs.calendars.DPCManager;
+import cn.aigestudio.datepicker.bizs.decors.DPDecor;
+import cn.aigestudio.datepicker.bizs.themes.DPTManager;
+import cn.aigestudio.datepicker.cons.DPMode;
+import cn.aigestudio.datepicker.entities.DPInfo;
 
 /**
- * 月视图
+ * MonthView
  *
- * @author AigeStudio 2015-05-21
+ * @author AigeStudio 2015-06-29
  */
-public class MonthView extends View implements ValueAnimator.AnimatorUpdateListener {
-    private Paint mPaint;
-    private TextPaint mTextPaint;
+public class MonthView extends View {
+    private static final Region[][] MONTH_REGIONS_4 = new Region[4][7];
+    private static final Region[][] MONTH_REGIONS_5 = new Region[5][7];
+    private static final Region[][] MONTH_REGIONS_6 = new Region[6][7];
+
+    private static final DPInfo[][] INFO_4 = new DPInfo[4][7];
+    private static final DPInfo[][] INFO_5 = new DPInfo[5][7];
+    private static final DPInfo[][] INFO_6 = new DPInfo[6][7];
+
+    private static final Map<String, List<Region>> REGION_SELECTED = new HashMap<>();
+
+    private DPCManager mCManager = DPCManager.getInstance();
+    private DPTManager mTManager = DPTManager.getInstance();
+
+    protected Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG |
+            Paint.LINEAR_TEXT_FLAG);
     private Scroller mScroller;
+    private DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();
+    private AccelerateInterpolator accelerateInterpolator = new AccelerateInterpolator();
+    private OnDateChangeListener onDateChangeListener;
+    private DatePicker.OnDatePickedListener onDatePickedListener;
+    private ScaleAnimationListener scaleAnimationListener;
 
-    private CalendarBiz mCalendarBiz;
+    private DPMode mDPMode = DPMode.MULTIPLE;
+    private SlideMode mSlideMode;
+    private DPDecor mDPDecor;
 
-    private OnPageChangeListener onPageChangeListener;
-    private OnSizeChangedListener onSizeChangedListener;
-
-    private int sizeBase;
-    private int lastPointX;
-    private int lastMoveX;
-    private int width, height;
-    private int criticalWidth;
-    private int index;
-    private int lastMonth, currentMonth, nextMonth;
-    private int lastYear, currentYear, nextYear;
-    private int animZoomOut1, animZoomIn1, animZoomOut2;
     private int circleRadius;
-    private int colorMain = 0xFFE95344;
+    private int indexYear, indexMonth;
+    private int centerYear, centerMonth;
+    private int leftYear, leftMonth;
+    private int rightYear, rightMonth;
+    private int topYear, topMonth;
+    private int bottomYear, bottomMonth;
+    private int width, height;
+    private int sizeDecor, sizeDecor2x, sizeDecor3x;
+    private int lastPointX, lastPointY;
+    private int lastMoveX, lastMoveY;
+    private int criticalWidth, criticalHeight;
+    private int animZoomOut1, animZoomIn1, animZoomOut2;
 
-    private float textSizeGregorian, textSizeLunar;
-    private float offsetYLunar;
+    private float sizeTextGregorian, sizeTextFestival;
+    private float offsetYFestival1, offsetYFestival2;
 
-    private boolean isLunarShow = true;
+    private boolean isNewEvent;
 
-    private EventType mEventType;
+    private Map<String, BGCircle> cirApr = new HashMap<>();
+    private Map<String, BGCircle> cirDpr = new HashMap<>();
 
-    private Map<Integer, List<Region>> calendarRegion = new HashMap<>();
-    private Region[][] mRegion = new Region[6][7];
-    private Map<String, BGCircle> circlesAppear = new HashMap<>();
-    private Map<String, BGCircle> circlesDisappear = new HashMap<>();
     private List<String> dateSelected = new ArrayList<>();
 
-    private enum EventType {
-        SINGLE, MULTIPLE
-    }
-
-    /**
-     * 页面改变监听接口
-     */
-    public interface OnPageChangeListener {
-        /**
-         * 月份改变回调方法
-         *
-         * @param month 当前页面显示的月份
-         */
-        void onMonthChange(int month);
-
-        /**
-         * 年份改变回调方法
-         *
-         * @param year 当前页面显示的年份
-         */
-        void onYearChange(int year);
-    }
-
-    /**
-     * 尺寸改变监听接口
-     * 当月视图的基准边改变时需要回调给标题视图
-     */
-    public interface OnSizeChangedListener {
-        /**
-         * 尺寸改变回调方法
-         *
-         * @param size 改变后的基准边
-         */
-        void onSizeChanged(int size);
-    }
-
     public MonthView(Context context) {
-        this(context, null);
-    }
-
-    public MonthView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public MonthView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-
-        mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.DEV_KERN_TEXT_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
-
+        super(context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            scaleAnimationListener = new ScaleAnimationListener();
+        }
         mScroller = new Scroller(context);
-
-        Calendar calendar = Calendar.getInstance();
-
-        currentYear = calendar.get(Calendar.YEAR);
-        currentMonth = calendar.get(Calendar.MONTH) + 1;
-
-        computeDate();
-
-        mCalendarBiz = new CalendarBiz(index, currentYear, currentMonth);
-
-        buildCalendarRegion();
-    }
-
-    /**
-     * 设置页面改变时的监听器
-     *
-     * @param onPageChangeListener ...
-     */
-    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
-        this.onPageChangeListener = onPageChangeListener;
-        if (null != this.onPageChangeListener) {
-            this.onPageChangeListener.onYearChange(currentYear);
-            this.onPageChangeListener.onMonthChange(currentMonth);
-        }
-    }
-
-    /**
-     * 设置尺寸改变时的监听器
-     *
-     * @param onSizeChangedListener ...
-     */
-    public void setOnSizeChangedListener(OnSizeChangedListener onSizeChangedListener) {
-        this.onSizeChangedListener = onSizeChangedListener;
-    }
-
-    /**
-     * 获取选择了的日期
-     *
-     * @return 选择了的日期列表
-     */
-    public List<String> getDateSelected() {
-        return dateSelected;
-    }
-
-    /**
-     * 设置是否显示农历
-     *
-     * @param isLunarShow ...
-     */
-    public void setLunarShow(boolean isLunarShow) {
-        this.isLunarShow = isLunarShow;
-        invalidate();
-    }
-
-    /**
-     * 设置主色调
-     *
-     * @param colorMain ...
-     */
-    public void setColorMain(int colorMain) {
-        this.colorMain = colorMain;
-        invalidate();
-    }
-
-    private void computeDate() {
-        nextYear = lastYear = currentYear;
-
-        nextMonth = currentMonth + 1;
-        lastMonth = currentMonth - 1;
-
-        if (null != onPageChangeListener) {
-            onPageChangeListener.onYearChange(currentYear);
-        }
-        if (currentMonth == 12) {
-            nextYear++;
-
-            mCalendarBiz.buildSolarTerm(nextYear);
-            if (null != onPageChangeListener) {
-                onPageChangeListener.onYearChange(nextYear);
-            }
-            nextMonth = 1;
-        }
-        if (currentMonth == 1) {
-            lastYear--;
-
-            mCalendarBiz.buildSolarTerm(lastYear);
-            if (null != onPageChangeListener) {
-                onPageChangeListener.onYearChange(lastYear);
-            }
-            lastMonth = 12;
-        }
-    }
-
-    private void buildCalendarRegion() {
-        if (!calendarRegion.containsKey(index)) {
-            List<Region> regions = new ArrayList<>();
-            calendarRegion.put(index, regions);
-        }
-    }
-
-    private String[][] gregorianToLunar(String[][] gregorian, int year, int month) {
-        String[][] lunar = new String[6][7];
-        for (int i = 0; i < gregorian.length; i++) {
-            for (int j = 0; j < gregorian[i].length; j++) {
-                String str = gregorian[i][j];
-                if (null == str) {
-                    str = "";
-                } else {
-                    str = mCalendarBiz.gregorianToLunar(year, month, Integer.valueOf(str));
-                }
-                lunar[i][j] = str;
-            }
-        }
-        return lunar;
-    }
-
-    private BGCircle createCircle(float x, float y) {
-        OvalShape circle = new OvalShape();
-        circle.resize(0, 0);
-        ShapeDrawable drawable = new ShapeDrawable(circle);
-        BGCircle circle1 = new BGCircle(drawable);
-        circle1.setX(x);
-        circle1.setY(y);
-        drawable.getPaint().setColor(0xFFDCDCDC);
-        return circle1;
-    }
-
-    private void defineContainRegion(int x, int y) {
-        for (int i = 0; i < mRegion.length; i++) {
-            for (int j = 0; j < mRegion[i].length; j++) {
-                Region region = mRegion[i][j];
-
-                if (null == mCalendarBiz.getGregorianCreated().get(index)[i][j]) {
-                    continue;
-                }
-                if (region.contains(x, y)) {
-                    List<Region> regions = calendarRegion.get(index);
-
-                    if (regions.contains(region)) {
-                        regions.remove(region);
-                    } else {
-                        regions.add(region);
-                    }
-                    final String date = currentYear + "-" + currentMonth + "-" + mCalendarBiz.getGregorianCreated().get(index)[i][j];
-
-                    if (dateSelected.contains(date)) {
-                        dateSelected.remove(date);
-
-                        BGCircle circle = circlesAppear.get(date);
-
-                        ValueAnimator animScale = ObjectAnimator.ofInt(circle, "radius", circleRadius, 0);
-                        animScale.setDuration(250);
-                        animScale.setInterpolator(new AccelerateInterpolator());
-                        animScale.addUpdateListener(this);
-                        animScale.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                circlesDisappear.remove(date);
-                            }
-                        });
-                        animScale.start();
-
-                        circlesDisappear.put(date, circle);
-
-                        circlesAppear.remove(date);
-                    } else {
-                        dateSelected.add(date);
-
-                        BGCircle circle = createCircle(region.getBounds().centerX() + index * sizeBase, region.getBounds().centerY());
-
-                        ValueAnimator animScale1 = ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
-                        animScale1.setDuration(250);
-                        animScale1.setInterpolator(new DecelerateInterpolator());
-                        animScale1.addUpdateListener(this);
-
-                        ValueAnimator animScale2 = ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
-                        animScale2.setDuration(100);
-                        animScale2.setInterpolator(new AccelerateInterpolator());
-                        animScale2.addUpdateListener(this);
-
-                        ValueAnimator animScale3 = ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
-                        animScale3.setDuration(150);
-                        animScale3.setInterpolator(new DecelerateInterpolator());
-                        animScale3.addUpdateListener(this);
-
-                        ValueAnimator animScale4 = ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
-                        animScale4.setDuration(50);
-                        animScale4.setInterpolator(new AccelerateInterpolator());
-                        animScale4.addUpdateListener(this);
-
-                        AnimatorSet animSet = new AnimatorSet();
-                        animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
-
-                        animSet.start();
-
-                        circlesAppear.put(date, circle);
-                    }
-                }
-            }
-        }
-    }
-
-    public void smoothScrollTo(int fx, int fy) {
-        int dx = fx - mScroller.getFinalX();
-        int dy = fy - mScroller.getFinalY();
-        smoothScrollBy(dx, dy);
-    }
-
-    private void smoothScrollBy(int dx, int dy) {
-        mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx, dy, 500);
-        invalidate();
+        mPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                lastPointX = (int) event.getX();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                int totalMoveX = (int) (lastPointX - event.getX()) + lastMoveX;
-                smoothScrollTo(totalMoveX, 0);
-                break;
-            case MotionEvent.ACTION_UP:
-                if (Math.abs(lastPointX - event.getX()) > 10) {
-                    if (lastPointX > event.getX()) {
-                        if (Math.abs(lastPointX - event.getX()) >= criticalWidth) {
-                            index++;
-                            currentMonth = (currentMonth + 1) % 13;
+    protected Parcelable onSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
 
-                            if (currentMonth == 0) {
-                                currentMonth = 1;
-                                currentYear++;
-
-                                mCalendarBiz.buildSolarTerm(currentYear);
-                            }
-                            computeDate();
-                            if (null != onPageChangeListener) {
-                                onPageChangeListener.onMonthChange(currentMonth);
-                                onPageChangeListener.onYearChange(currentYear);
-                            }
-                            buildCalendarRegion();
-                        }
-                        smoothScrollTo(width * index, 0);
-                        lastMoveX = width * index;
-                    } else if (lastPointX < event.getX()) {
-                        if (Math.abs(lastPointX - event.getX()) >= criticalWidth) {
-                            index--;
-                            currentMonth = (currentMonth - 1) % 12;
-                            if (currentMonth == 0) {
-                                currentMonth = 12;
-                                currentYear--;
-                                mCalendarBiz.buildSolarTerm(currentYear);
-                            }
-                            computeDate();
-                            if (null != onPageChangeListener) {
-                                onPageChangeListener.onMonthChange(currentMonth);
-                                onPageChangeListener.onYearChange(currentYear);
-                            }
-                            buildCalendarRegion();
-                        }
-                        smoothScrollTo(width * index, 0);
-                        lastMoveX = width * index;
-                    }
-                } else {
-                    defineContainRegion((int) event.getX(), (int) event.getY());
-                }
-                break;
-        }
-        return true;
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
     }
 
     @Override
@@ -405,78 +120,177 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
-
-        String[][] currentGregorian = mCalendarBiz.getGregorianCreated().get(index);
-
-        if (null == currentGregorian[4][0]) {
-            setMeasuredDimension(measureWidth, (int) (measureWidth * 4 / 7F));
-        } else if (null == currentGregorian[5][0]) {
-            setMeasuredDimension(measureWidth, (int) (measureWidth * 5 / 7F));
-        } else {
-            setMeasuredDimension(measureWidth, (int) (measureWidth * 6 / 7F));
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mScroller.forceFinished(true);
+                mSlideMode = null;
+                isNewEvent = true;
+                lastPointX = (int) event.getX();
+                lastPointY = (int) event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (isNewEvent) {
+                    if (Math.abs(lastPointX - event.getX()) > 100) {
+                        mSlideMode = SlideMode.HOR;
+                        isNewEvent = false;
+                    } else if (Math.abs(lastPointY - event.getY()) > 50) {
+                        mSlideMode = SlideMode.VER;
+                        isNewEvent = false;
+                    }
+                }
+                if (mSlideMode == SlideMode.HOR) {
+                    int totalMoveX = (int) (lastPointX - event.getX()) + lastMoveX;
+                    smoothScrollTo(totalMoveX, indexYear * height);
+                } else if (mSlideMode == SlideMode.VER) {
+                    int totalMoveY = (int) (lastPointY - event.getY()) + lastMoveY;
+                    smoothScrollTo(width * indexMonth, totalMoveY);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if (mSlideMode == SlideMode.VER) {
+                    if (Math.abs(lastPointY - event.getY()) > 25) {
+                        if (lastPointY < event.getY()) {
+                            if (Math.abs(lastPointY - event.getY()) >= criticalHeight) {
+                                indexYear--;
+                                centerYear = centerYear - 1;
+                            }
+                        } else if (lastPointY > event.getY()) {
+                            if (Math.abs(lastPointY - event.getY()) >= criticalHeight) {
+                                indexYear++;
+                                centerYear = centerYear + 1;
+                            }
+                        }
+                        buildRegion();
+                        computeDate();
+                        smoothScrollTo(width * indexMonth, height * indexYear);
+                        lastMoveY = height * indexYear;
+                    } else {
+                        defineRegion((int) event.getX(), (int) event.getY());
+                    }
+                } else if (mSlideMode == SlideMode.HOR) {
+                    if (Math.abs(lastPointX - event.getX()) > 25) {
+                        if (lastPointX > event.getX() &&
+                                Math.abs(lastPointX - event.getX()) >= criticalWidth) {
+                            indexMonth++;
+                            centerMonth = (centerMonth + 1) % 13;
+                            if (centerMonth == 0) {
+                                centerMonth = 1;
+                                centerYear++;
+                            }
+                        } else if (lastPointX < event.getX() &&
+                                Math.abs(lastPointX - event.getX()) >= criticalWidth) {
+                            indexMonth--;
+                            centerMonth = (centerMonth - 1) % 12;
+                            if (centerMonth == 0) {
+                                centerMonth = 12;
+                                centerYear--;
+                            }
+                        }
+                        buildRegion();
+                        computeDate();
+                        smoothScrollTo(width * indexMonth, indexYear * height);
+                        lastMoveX = width * indexMonth;
+                    } else {
+                        defineRegion((int) event.getX(), (int) event.getY());
+                    }
+                } else {
+                    defineRegion((int) event.getX(), (int) event.getY());
+                }
+                break;
         }
+        return true;
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
+        setMeasuredDimension(measureWidth, (int) (measureWidth * 6F / 7F));
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         width = w;
         height = h;
 
         criticalWidth = (int) (1F / 5F * width);
+        criticalHeight = (int) (1F / 5F * height);
 
-        sizeBase = width;
+        int cellW = (int) (w / 7F);
+        int cellH4 = (int) (h / 4F);
+        int cellH5 = (int) (h / 5F);
+        int cellH6 = (int) (h / 6F);
 
-        if (null != onSizeChangedListener) {
-            onSizeChangedListener.onSizeChanged(sizeBase);
-        }
-        int sizeCell = (int) (sizeBase / 7F);
-        circleRadius = sizeCell;
-        animZoomOut1 = (int) (sizeCell * 1.2F);
-        animZoomIn1 = (int) (sizeCell * 0.8F);
-        animZoomOut2 = (int) (sizeCell * 1.1F);
+        circleRadius = cellW;
 
-        textSizeGregorian = sizeBase / 20F;
-        mTextPaint.setTextSize(textSizeGregorian);
+        animZoomOut1 = (int) (cellW * 1.2F);
+        animZoomIn1 = (int) (cellW * 0.8F);
+        animZoomOut2 = (int) (cellW * 1.1F);
 
-        float gregorianH = mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top;
+        sizeDecor = (int) (cellW / 3F);
+        sizeDecor2x = sizeDecor * 2;
+        sizeDecor3x = sizeDecor * 3;
 
-        textSizeLunar = sizeBase / 35F;
-        mTextPaint.setTextSize(textSizeLunar);
+        sizeTextGregorian = width / 20F;
+        mPaint.setTextSize(sizeTextGregorian);
 
-        float lunarH = mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top;
+        float heightGregorian = mPaint.getFontMetrics().bottom - mPaint.getFontMetrics().top;
+        sizeTextFestival = width / 40F;
+        mPaint.setTextSize(sizeTextFestival);
 
-        offsetYLunar = (((Math.abs(mTextPaint.ascent() + mTextPaint.descent())) / 2) + lunarH / 2 + gregorianH / 2)
-                * 3F / 4F;
+        float heightFestival = mPaint.getFontMetrics().bottom - mPaint.getFontMetrics().top;
+        offsetYFestival1 = (((Math.abs(mPaint.ascent() + mPaint.descent())) / 2F) +
+                heightFestival / 2F + heightGregorian / 2F) / 2F;
+        offsetYFestival2 = offsetYFestival1 * 2F;
 
-        for (int i = 0; i < mRegion.length; i++) {
-            for (int j = 0; j < mRegion[i].length; j++) {
+        for (int i = 0; i < MONTH_REGIONS_4.length; i++) {
+            for (int j = 0; j < MONTH_REGIONS_4[i].length; j++) {
                 Region region = new Region();
-                region.set((j * sizeCell), (i * sizeCell), sizeCell + (j * sizeCell), sizeCell + (i * sizeCell));
-                mRegion[i][j] = region;
+                region.set((j * cellW), (i * cellH4), cellW + (j * cellW),
+                        cellW + (i * cellH4));
+                MONTH_REGIONS_4[i][j] = region;
+            }
+        }
+        for (int i = 0; i < MONTH_REGIONS_5.length; i++) {
+            for (int j = 0; j < MONTH_REGIONS_5[i].length; j++) {
+                Region region = new Region();
+                region.set((j * cellW), (i * cellH5), cellW + (j * cellW),
+                        cellW + (i * cellH5));
+                MONTH_REGIONS_5[i][j] = region;
+            }
+        }
+        for (int i = 0; i < MONTH_REGIONS_6.length; i++) {
+            for (int j = 0; j < MONTH_REGIONS_6[i].length; j++) {
+                Region region = new Region();
+                region.set((j * cellW), (i * cellH6), cellW + (j * cellW),
+                        cellW + (i * cellH6));
+                MONTH_REGIONS_6[i][j] = region;
             }
         }
     }
 
     @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        this.invalidate();
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
-        drawCircle(canvas);
-        drawMonths(canvas);
+        canvas.drawColor(mTManager.colorBG());
+
+        draw(canvas, width * indexMonth, (indexYear - 1) * height, topYear, topMonth);
+        draw(canvas, width * (indexMonth - 1), height * indexYear, leftYear, leftMonth);
+        draw(canvas, width * indexMonth, indexYear * height, centerYear, centerMonth);
+        draw(canvas, width * (indexMonth + 1), height * indexYear, rightYear, rightMonth);
+        draw(canvas, width * indexMonth, (indexYear + 1) * height, bottomYear, bottomMonth);
+
+        drawBGCircle(canvas);
     }
 
-    private void drawCircle(Canvas canvas) {
-        for (String s : circlesDisappear.keySet()) {
-            BGCircle circle = circlesDisappear.get(s);
-            drawBGCircle(canvas, circle);
+    private void drawBGCircle(Canvas canvas) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            for (String s : cirDpr.keySet()) {
+                BGCircle circle = cirDpr.get(s);
+                drawBGCircle(canvas, circle);
+            }
         }
-        for (String s : circlesAppear.keySet()) {
-            BGCircle circle = circlesAppear.get(s);
+        for (String s : cirApr.keySet()) {
+            BGCircle circle = cirApr.get(s);
             drawBGCircle(canvas, circle);
         }
     }
@@ -489,57 +303,473 @@ public class MonthView extends View implements ValueAnimator.AnimatorUpdateListe
         canvas.restore();
     }
 
-    private void drawMonths(Canvas canvas) {
-        drawMonth(canvas, (index - 1) * sizeBase, lastYear, lastMonth);
-        drawMonth(canvas, index * sizeBase, currentYear, currentMonth);
-        drawMonth(canvas, (index + 1) * sizeBase, nextYear, nextMonth);
+    private void draw(Canvas canvas, int x, int y, int year, int month) {
+        canvas.save();
+        canvas.translate(x, y);
+        DPInfo[][] info = mCManager.obtainDPInfo(year, month);
+        DPInfo[][] result;
+        Region[][] tmp;
+        if (TextUtils.isEmpty(info[4][0].strG)) {
+            tmp = MONTH_REGIONS_4;
+            arrayClear(INFO_4);
+            result = arrayCopy(info, INFO_4);
+        } else if (TextUtils.isEmpty(info[5][0].strG)) {
+            tmp = MONTH_REGIONS_5;
+            arrayClear(INFO_5);
+            result = arrayCopy(info, INFO_5);
+        } else {
+            tmp = MONTH_REGIONS_6;
+            arrayClear(INFO_6);
+            result = arrayCopy(info, INFO_6);
+        }
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+                draw(canvas, tmp[i][j].getBounds(), info[i][j]);
+            }
+        }
+        canvas.restore();
     }
 
-    private void drawMonth(Canvas canvas, float offsetX, int year, int month) {
-        canvas.save();
-        canvas.translate(offsetX, 0);
+    private void draw(Canvas canvas, Rect rect, DPInfo info) {
+        drawBG(canvas, rect, info);
+        drawGregorian(canvas, rect, info.strG, info.isWeekend);
+        drawFestival(canvas, rect, info.strF, info.isFestival);
+        drawDecor(canvas, rect, info);
+    }
 
-        int current = (int) (offsetX / sizeBase);
-        mTextPaint.setTextSize(textSizeGregorian);
-        mTextPaint.setColor(Color.BLACK);
-
-        String[][] gregorianCurrent = mCalendarBiz.getGregorianCreated().get(current);
-
-        if (null == gregorianCurrent) {
-            gregorianCurrent = mCalendarBiz.buildGregorian(year, month);
+    private void drawBG(Canvas canvas, Rect rect, DPInfo info) {
+        if (null != mDPDecor && info.isDecorBG) {
+            mDPDecor.drawDecorBG(canvas, rect, mPaint);
         }
-        for (int i = 0; i < gregorianCurrent.length; i++) {
-            for (int j = 0; j < gregorianCurrent[i].length; j++) {
-                String str = gregorianCurrent[i][j];
-                if (null == str) {
-                    str = "";
+        if (info.isToday) {
+            drawBGToday(canvas, rect);
+        } else {
+            drawBGHoliday(canvas, rect, info.isHoliday);
+            drawBGDeferred(canvas, rect, info.isDeferred);
+        }
+    }
+
+    private void drawBGToday(Canvas canvas, Rect rect) {
+        mPaint.setColor(mTManager.colorToday());
+        canvas.drawCircle(rect.centerX(), rect.centerY(), circleRadius / 2F, mPaint);
+    }
+
+    private void drawBGHoliday(Canvas canvas, Rect rect, boolean isHoliday) {
+        mPaint.setColor(mTManager.colorHoliday());
+        if (isHoliday) canvas.drawCircle(rect.centerX(), rect.centerY(), circleRadius / 2F, mPaint);
+    }
+
+    private void drawBGDeferred(Canvas canvas, Rect rect, boolean isDeferred) {
+        mPaint.setColor(mTManager.colorDeferred());
+        if (isDeferred)
+            canvas.drawCircle(rect.centerX(), rect.centerY(), circleRadius / 2F, mPaint);
+    }
+
+    private void drawGregorian(Canvas canvas, Rect rect, String str, boolean isWeekend) {
+        mPaint.setTextSize(sizeTextGregorian);
+        if (isWeekend) {
+            mPaint.setColor(mTManager.colorWeekend());
+        } else {
+            mPaint.setColor(mTManager.colorG());
+        }
+        canvas.drawText(str, rect.centerX(), rect.centerY(), mPaint);
+    }
+
+    private void drawFestival(Canvas canvas, Rect rect, String str, boolean isFestival) {
+        mPaint.setTextSize(sizeTextFestival);
+        if (isFestival) {
+            mPaint.setColor(mTManager.colorF());
+        } else {
+            mPaint.setColor(mTManager.colorL());
+        }
+        if (str.contains("&")) {
+            String[] s = str.split("&");
+            String str1 = s[0];
+            if (mPaint.measureText(str1) > rect.width()) {
+                float ch = mPaint.measureText(str1, 0, 1);
+                int length = (int) (rect.width() / ch);
+                canvas.drawText(str1.substring(0, length), rect.centerX(),
+                        rect.centerY() + offsetYFestival1, mPaint);
+                canvas.drawText(str1.substring(length), rect.centerX(),
+                        rect.centerY() + offsetYFestival2, mPaint);
+            } else {
+                canvas.drawText(str1, rect.centerX(),
+                        rect.centerY() + offsetYFestival1, mPaint);
+                String str2 = s[1];
+                if (mPaint.measureText(str2) < rect.width()) {
+                    canvas.drawText(str2, rect.centerX(),
+                            rect.centerY() + offsetYFestival2, mPaint);
                 }
-                canvas.drawText(str, mRegion[i][j].getBounds().centerX(),
-                        mRegion[i][j].getBounds().centerY(), mTextPaint);
             }
-        }
-        if (isLunarShow) {
-            String[][] lunarCurrent = mCalendarBiz.getLunarCreated().get(current);
-            if (null == lunarCurrent) {
-                lunarCurrent = gregorianToLunar(gregorianCurrent, year, month);
-            }
-            mTextPaint.setTextSize(textSizeLunar);
-            for (int i = 0; i < lunarCurrent.length; i++) {
-                for (int j = 0; j < lunarCurrent[i].length; j++) {
-                    String str = lunarCurrent[i][j];
-                    if (str.contains(" ")) {
-                        str.trim();
-                        mTextPaint.setColor(colorMain);
-                    } else {
-                        mTextPaint.setColor(Color.GRAY);
+        } else {
+            if (mPaint.measureText(str) > rect.width()) {
+                float ch = 0.0F;
+                for (char c : str.toCharArray()) {
+                    float tmp = mPaint.measureText(String.valueOf(c));
+                    if (tmp > ch) {
+                        ch = tmp;
                     }
-                    canvas.drawText(str, mRegion[i][j].getBounds().centerX(), mRegion[i][j].getBounds().centerY() +
-                            offsetYLunar, mTextPaint);
+                }
+                int length = (int) (rect.width() / ch);
+                canvas.drawText(str.substring(0, length), rect.centerX(),
+                        rect.centerY() + offsetYFestival1, mPaint);
+                canvas.drawText(str.substring(length), rect.centerX(),
+                        rect.centerY() + offsetYFestival2, mPaint);
+            } else {
+                canvas.drawText(str, rect.centerX(),
+                        rect.centerY() + offsetYFestival1, mPaint);
+            }
+        }
+    }
+
+    private void drawDecor(Canvas canvas, Rect rect, DPInfo info) {
+        if (!TextUtils.isEmpty(info.strG)) {
+            if (null != mDPDecor && info.isDecorTL) {
+                canvas.save();
+                canvas.clipRect(rect.left, rect.top, rect.left + sizeDecor, rect.top + sizeDecor);
+                mDPDecor.drawDecorTL(canvas, canvas.getClipBounds(), mPaint);
+                canvas.restore();
+            }
+            if (null != mDPDecor && info.isDecorL) {
+                canvas.save();
+                canvas.clipRect(rect.left + sizeDecor, rect.top, rect.left + sizeDecor2x,
+                        rect.top + sizeDecor);
+                mDPDecor.drawDecorT(canvas, canvas.getClipBounds(), mPaint);
+                canvas.restore();
+            }
+            if (null != mDPDecor && info.isDecorTR) {
+                canvas.save();
+                canvas.clipRect(rect.left + sizeDecor2x, rect.top, rect.left + sizeDecor3x,
+                        rect.top + sizeDecor);
+                mDPDecor.drawDecorTR(canvas, canvas.getClipBounds(), mPaint);
+                canvas.restore();
+            }
+            if (null != mDPDecor && info.isDecorL) {
+                canvas.save();
+                canvas.clipRect(rect.left, rect.top + sizeDecor, rect.left + sizeDecor,
+                        rect.top + sizeDecor2x);
+                mDPDecor.drawDecorL(canvas, canvas.getClipBounds(), mPaint);
+                canvas.restore();
+            }
+            if (null != mDPDecor && info.isDecorR) {
+                canvas.save();
+                canvas.clipRect(rect.left + sizeDecor2x, rect.top + sizeDecor,
+                        rect.left + sizeDecor3x, rect.top + sizeDecor2x);
+                mDPDecor.drawDecorR(canvas, canvas.getClipBounds(), mPaint);
+                canvas.restore();
+            }
+        }
+    }
+
+    List<String> getDateSelected() {
+        return dateSelected;
+    }
+
+    void setOnDateChangeListener(OnDateChangeListener onDateChangeListener) {
+        this.onDateChangeListener = onDateChangeListener;
+    }
+
+    public void setOnDatePickedListener(DatePicker.OnDatePickedListener onDatePickedListener) {
+        this.onDatePickedListener = onDatePickedListener;
+    }
+
+    void setDPMode(DPMode mode) {
+        this.mDPMode = mode;
+    }
+
+    void setDPDecor(DPDecor decor) {
+        this.mDPDecor = decor;
+    }
+
+    DPMode getDPMode() {
+        return mDPMode;
+    }
+
+    void setDate(int year, int month) {
+        centerYear = year;
+        centerMonth = month;
+        indexYear = 0;
+        indexMonth = 0;
+        buildRegion();
+        computeDate();
+        requestLayout();
+        invalidate();
+    }
+
+    private void smoothScrollTo(int fx, int fy) {
+        int dx = fx - mScroller.getFinalX();
+        int dy = fy - mScroller.getFinalY();
+        smoothScrollBy(dx, dy);
+    }
+
+    private void smoothScrollBy(int dx, int dy) {
+        mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx, dy, 500);
+        invalidate();
+    }
+
+    private BGCircle createCircle(float x, float y) {
+        OvalShape circle = new OvalShape();
+        circle.resize(0, 0);
+        ShapeDrawable drawable = new ShapeDrawable(circle);
+        BGCircle circle1 = new BGCircle(drawable);
+        circle1.setX(x);
+        circle1.setY(y);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            circle1.setRadius(circleRadius);
+        }
+        drawable.getPaint().setColor(mTManager.colorBGCircle());
+        return circle1;
+    }
+
+    private void buildRegion() {
+        String key = indexYear + ":" + indexMonth;
+        if (!REGION_SELECTED.containsKey(key)) {
+            REGION_SELECTED.put(key, new ArrayList<Region>());
+        }
+    }
+
+    private void arrayClear(DPInfo[][] info) {
+        for (DPInfo[] anInfo : info) {
+            Arrays.fill(anInfo, null);
+        }
+    }
+
+    private DPInfo[][] arrayCopy(DPInfo[][] src, DPInfo[][] dst) {
+        for (int i = 0; i < dst.length; i++) {
+            System.arraycopy(src[i], 0, dst[i], 0, dst[i].length);
+        }
+        return dst;
+    }
+
+    private void defineRegion(int x, int y) {
+        DPInfo[][] info = mCManager.obtainDPInfo(centerYear, centerMonth);
+        Region[][] tmp;
+        if (TextUtils.isEmpty(info[4][0].strG)) {
+            tmp = MONTH_REGIONS_4;
+        } else if (TextUtils.isEmpty(info[5][0].strG)) {
+            tmp = MONTH_REGIONS_5;
+        } else {
+            tmp = MONTH_REGIONS_6;
+        }
+        for (int i = 0; i < tmp.length; i++) {
+            for (int j = 0; j < tmp[i].length; j++) {
+                Region region = tmp[i][j];
+                if (TextUtils.isEmpty(mCManager.obtainDPInfo(centerYear, centerMonth)[i][j].strG)) {
+                    continue;
+                }
+                if (region.contains(x, y)) {
+                    List<Region> regions = REGION_SELECTED.get(indexYear + ":" + indexMonth);
+                    if (mDPMode == DPMode.SINGLE) {
+                        cirApr.clear();
+                        regions.add(region);
+                        final String date = centerYear + "-" + centerMonth + "-" +
+                                mCManager.obtainDPInfo(centerYear, centerMonth)[i][j].strG;
+                        BGCircle circle = createCircle(
+                                region.getBounds().centerX() + indexMonth * width,
+                                region.getBounds().centerY() + indexYear * height);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            ValueAnimator animScale1 =
+                                    ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
+                            animScale1.setDuration(250);
+                            animScale1.setInterpolator(decelerateInterpolator);
+                            animScale1.addUpdateListener(scaleAnimationListener);
+
+                            ValueAnimator animScale2 =
+                                    ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
+                            animScale2.setDuration(100);
+                            animScale2.setInterpolator(accelerateInterpolator);
+                            animScale2.addUpdateListener(scaleAnimationListener);
+
+                            ValueAnimator animScale3 =
+                                    ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
+                            animScale3.setDuration(150);
+                            animScale3.setInterpolator(decelerateInterpolator);
+                            animScale3.addUpdateListener(scaleAnimationListener);
+
+                            ValueAnimator animScale4 =
+                                    ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
+                            animScale4.setDuration(50);
+                            animScale4.setInterpolator(accelerateInterpolator);
+                            animScale4.addUpdateListener(scaleAnimationListener);
+
+                            AnimatorSet animSet = new AnimatorSet();
+                            animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
+                            animSet.addListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    if (null != onDatePickedListener) {
+                                        onDatePickedListener.onDatePicked(date);
+                                    }
+                                }
+                            });
+                            animSet.start();
+                        }
+                        cirApr.put(date, circle);
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                            invalidate();
+                            if (null != onDatePickedListener) {
+                                onDatePickedListener.onDatePicked(date);
+                            }
+                        }
+                    }
+                    else if (mDPMode == DPMode.MULTIPLE) {
+                        if (regions.contains(region)) {
+                            regions.remove(region);
+                        } else {
+                            regions.add(region);
+                        }
+                        final String date = centerYear + "-" + centerMonth + "-" +
+                                mCManager.obtainDPInfo(centerYear, centerMonth)[i][j].strG;
+                        if (dateSelected.contains(date)) {
+                            dateSelected.remove(date);
+                            BGCircle circle = cirApr.get(date);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                ValueAnimator animScale = ObjectAnimator.ofInt(circle, "radius", circleRadius, 0);
+                                animScale.setDuration(250);
+                                animScale.setInterpolator(accelerateInterpolator);
+                                animScale.addUpdateListener(scaleAnimationListener);
+                                animScale.addListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        cirDpr.remove(date);
+                                    }
+                                });
+                                animScale.start();
+                                cirDpr.put(date, circle);
+                            }
+                            cirApr.remove(date);
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                                invalidate();
+                            }
+                        } else {
+                            dateSelected.add(date);
+                            BGCircle circle = createCircle(
+                                    region.getBounds().centerX() + indexMonth * width,
+                                    region.getBounds().centerY() + indexYear * height);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                ValueAnimator animScale1 =
+                                        ObjectAnimator.ofInt(circle, "radius", 0, animZoomOut1);
+                                animScale1.setDuration(250);
+                                animScale1.setInterpolator(decelerateInterpolator);
+                                animScale1.addUpdateListener(scaleAnimationListener);
+
+                                ValueAnimator animScale2 =
+                                        ObjectAnimator.ofInt(circle, "radius", animZoomOut1, animZoomIn1);
+                                animScale2.setDuration(100);
+                                animScale2.setInterpolator(accelerateInterpolator);
+                                animScale2.addUpdateListener(scaleAnimationListener);
+
+                                ValueAnimator animScale3 =
+                                        ObjectAnimator.ofInt(circle, "radius", animZoomIn1, animZoomOut2);
+                                animScale3.setDuration(150);
+                                animScale3.setInterpolator(decelerateInterpolator);
+                                animScale3.addUpdateListener(scaleAnimationListener);
+
+                                ValueAnimator animScale4 =
+                                        ObjectAnimator.ofInt(circle, "radius", animZoomOut2, circleRadius);
+                                animScale4.setDuration(50);
+                                animScale4.setInterpolator(accelerateInterpolator);
+                                animScale4.addUpdateListener(scaleAnimationListener);
+
+                                AnimatorSet animSet = new AnimatorSet();
+                                animSet.playSequentially(animScale1, animScale2, animScale3, animScale4);
+                                animSet.start();
+                            }
+                            cirApr.put(date, circle);
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                                invalidate();
+                            }
+                        }
+                    }
                 }
             }
-            mCalendarBiz.getLunarCreated().put(current, lunarCurrent);
         }
-        mCalendarBiz.getGregorianCreated().put(current, gregorianCurrent);
-        canvas.restore();
+    }
+
+    private void computeDate() {
+        rightYear = leftYear = centerYear;
+        topYear = centerYear - 1;
+        bottomYear = centerYear + 1;
+
+        topMonth = centerMonth;
+        bottomMonth = centerMonth;
+
+        rightMonth = centerMonth + 1;
+        leftMonth = centerMonth - 1;
+
+        if (centerMonth == 12) {
+            rightYear++;
+            rightMonth = 1;
+        }
+        if (centerMonth == 1) {
+            leftYear--;
+            leftMonth = 12;
+        }
+        if (null != onDateChangeListener) {
+            onDateChangeListener.onYearChange(centerYear);
+            onDateChangeListener.onMonthChange(centerMonth);
+        }
+    }
+
+    interface OnDateChangeListener {
+        void onMonthChange(int month);
+
+        void onYearChange(int year);
+    }
+
+    private enum SlideMode {
+        VER,
+        HOR
+    }
+
+    private class BGCircle {
+        private float x, y;
+        private int radius;
+
+        private ShapeDrawable shape;
+
+        public BGCircle(ShapeDrawable shape) {
+            this.shape = shape;
+        }
+
+        public float getX() {
+            return x;
+        }
+
+        public void setX(float x) {
+            this.x = x;
+        }
+
+        public float getY() {
+            return y;
+        }
+
+        public void setY(float y) {
+            this.y = y;
+        }
+
+        public int getRadius() {
+            return radius;
+        }
+
+        public void setRadius(int radius) {
+            this.radius = radius;
+        }
+
+        public ShapeDrawable getShape() {
+            return shape;
+        }
+
+        public void setShape(ShapeDrawable shape) {
+            this.shape = shape;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private class ScaleAnimationListener implements ValueAnimator.AnimatorUpdateListener {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            MonthView.this.invalidate();
+        }
     }
 }

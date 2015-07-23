@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/calendars/DPCManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/calendars/DPCNCalendar.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/calendars/DPCalendar.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/calendars/DPUSCalendar.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/calendars/SolarTerm.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/decors/DPDecor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/languages/CN.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/languages/DPLManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/languages/EN.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/themes/DPBaseTheme.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/themes/DPCNTheme.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/themes/DPTManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/bizs/themes/DPTheme.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/cons/DPMode.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/entities/DPInfo.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/utils/DataUtils.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/utils/MeasureUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/views/DatePicker.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DatePicker/src/main/java/cn/aigestudio/datepicker/views/MonthView.java" charset="UTF-8" />
+  </component>
 </project>
 

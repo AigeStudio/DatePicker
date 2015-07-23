@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "cn.aigestudio.datepicker.demo"
-        minSdkVersion 11
+        minSdkVersion 1
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "2.0.0"
     }
     buildTypes {
         release {
