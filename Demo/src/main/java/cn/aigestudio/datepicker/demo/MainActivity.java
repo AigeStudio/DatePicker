@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cn.aigestudio.datepicker.bizs.calendars.DPCManager;
-import cn.aigestudio.datepicker.bizs.decors.DPDecor;
-import cn.aigestudio.datepicker.cons.DPMode;
+import cn.aigestudio.datepicker.interfaces.OnDateSelected;
 import cn.aigestudio.datepicker.views.DatePicker;
 
 /**
@@ -41,12 +39,11 @@ public class MainActivity extends Activity {
 
         // 默认多选模式
         DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
-        picker.setDate(2015, 7);
-        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+        picker.setOnDateSelected(new OnDateSelected() {
             @Override
-            public void onDateSelected(List<String> date) {
+            public void selected(List<String> strings) {
                 String result = "";
-                Iterator iterator = date.iterator();
+                Iterator iterator = strings.iterator();
                 while (iterator.hasNext()) {
                     result += iterator.next();
                     if (iterator.hasNext()) {
@@ -135,12 +132,11 @@ public class MainActivity extends Activity {
                 final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
                 dialog.show();
                 DatePicker picker = new DatePicker(MainActivity.this);
-                picker.setDate(2015, 7);
-                picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+                picker.setOnDateSelected(new OnDateSelected() {
                     @Override
-                    public void onDateSelected(List<String> date) {
+                    public void selected(List<String> strings) {
                         String result = "";
-                        Iterator iterator = date.iterator();
+                        Iterator iterator = strings.iterator();
                         while (iterator.hasNext()) {
                             result += iterator.next();
                             if (iterator.hasNext()) {
@@ -148,6 +144,7 @@ public class MainActivity extends Activity {
                             }
                         }
                         Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 });
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams

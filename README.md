@@ -48,6 +48,9 @@
 * 优化代码逻辑提升执行效率
 * 该版本后不再作重大更新
 
+###2.0.1
+BugFix：忘记更改测试代码导致的数据问题
+
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
@@ -56,7 +59,7 @@
 ##如何集成到项目
 ###方式一 直接从maven center compile
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:2.0.0'
+compile 'cn.aigestudio.datepicker:DatePicker:2.0.1'
 ```
 
 ###方式二 手动导入

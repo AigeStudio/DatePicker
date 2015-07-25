@@ -17,7 +17,6 @@ import cn.aigestudio.datepicker.bizs.themes.DPTManager;
 import cn.aigestudio.datepicker.cons.DPMode;
 import cn.aigestudio.datepicker.utils.MeasureUtil;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
@@ -26,15 +25,15 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * @author AigeStudio 2015-06-29
  */
 public class DatePicker extends LinearLayout {
-    private DPTManager mTManager;
-    private DPLManager mLManager;
+    private DPTManager mTManager;// 主题管理器
+    private DPLManager mLManager;// 语言管理器
 
-    private MonthView monthView;
-    private TextView tvYear, tvMonth;
-    private TextView tvEnsure;
+    private MonthView monthView;// 月视图
+    private TextView tvYear, tvMonth;// 年份 月份显示
+    private TextView tvEnsure;// 确定按钮显示
 
 
-    private OnDateSelectedListener onDateSelectedListener;
+    private OnDateSelectedListener onDateSelectedListener;// 日期多选后监听
 
     /**
      * 日期单选监听器
@@ -59,13 +58,19 @@ public class DatePicker extends LinearLayout {
         mTManager = DPTManager.getInstance();
         mLManager = DPLManager.getInstance();
 
+        // 设置排列方向为竖向
         setOrientation(VERTICAL);
 
+        LayoutParams llParams =
+                new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        // 标题栏根布局
         RelativeLayout rlTitle = new RelativeLayout(context);
         rlTitle.setBackgroundColor(mTManager.colorTitleBG());
         int rlTitlePadding = MeasureUtil.dp2px(context, 10);
         rlTitle.setPadding(rlTitlePadding, rlTitlePadding, rlTitlePadding, rlTitlePadding);
 
+        // 周视图根布局
         LinearLayout llWeek = new LinearLayout(context);
         llWeek.setBackgroundColor(mTManager.colorTitleBG());
         llWeek.setOrientation(HORIZONTAL);
@@ -74,6 +79,7 @@ public class DatePicker extends LinearLayout {
         LayoutParams lpWeek = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         lpWeek.weight = 1;
 
+        // 标题栏子元素布局参数
         RelativeLayout.LayoutParams lpYear =
                 new RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         lpYear.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -85,16 +91,20 @@ public class DatePicker extends LinearLayout {
         lpEnsure.addRule(RelativeLayout.CENTER_VERTICAL);
         lpEnsure.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
+        // --------------------------------------------------------------------------------标题栏
+        // 年份显示
         tvYear = new TextView(context);
         tvYear.setText("2015");
         tvYear.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         tvYear.setTextColor(mTManager.colorTitle());
 
+        // 月份显示
         tvMonth = new TextView(context);
         tvMonth.setText("六月");
         tvMonth.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         tvMonth.setTextColor(mTManager.colorTitle());
 
+        // 确定显示
         tvEnsure = new TextView(context);
         tvEnsure.setText(mLManager.titleEnsure());
         tvEnsure.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -112,6 +122,9 @@ public class DatePicker extends LinearLayout {
         rlTitle.addView(tvMonth, lpMonth);
         rlTitle.addView(tvEnsure, lpEnsure);
 
+        addView(rlTitle, llParams);
+
+        // --------------------------------------------------------------------------------周视图
         for (int i = 0; i < mLManager.titleWeek().length; i++) {
             TextView tvWeek = new TextView(context);
             tvWeek.setText(mLManager.titleWeek()[i]);
@@ -120,9 +133,9 @@ public class DatePicker extends LinearLayout {
             tvWeek.setTextColor(mTManager.colorTitle());
             llWeek.addView(tvWeek, lpWeek);
         }
-        addView(rlTitle, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-        addView(llWeek, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        addView(llWeek, llParams);
 
+        // ------------------------------------------------------------------------------------月视图
         monthView = new MonthView(context);
         monthView.setOnDateChangeListener(new MonthView.OnDateChangeListener() {
             @Override
@@ -139,7 +152,7 @@ public class DatePicker extends LinearLayout {
                 tvYear.setText(tmp);
             }
         });
-        addView(monthView, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        addView(monthView, llParams);
     }
 
     /**
