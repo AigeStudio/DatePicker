@@ -48,13 +48,11 @@
 * 优化代码逻辑提升执行效率
 * 该版本后不再作重大更新
 
-###2.0.1
-BugFix：忘记更改测试代码导致的数据问题
+###2.0.1 stable
+BugFix：忘记更改测试代码导致的显示问题
 
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
-
-因为Gif压缩问题导致预览图看起来有点卡，运行没问题
 
 ##如何集成到项目
 ###方式一 直接从maven center compile
