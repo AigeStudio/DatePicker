@@ -3,6 +3,7 @@ package cn.aigestudio.datepicker.bizs.languages;
 /**
  * 中文的默认实现类
  * 如果你想实现更多的语言请参考Language{@link DPLManager}
+ *
  * The implementation class of chinese.
  * You can refer to Language{@link DPLManager} if you want to define more language.
  *

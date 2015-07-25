@@ -3,7 +3,7 @@ package cn.aigestudio.datepicker.bizs.themes;
 /**
  * 天朝日历主题类
  * 其他国家的主题不需要这样去处理
- * <p/>
+ * 
  * Theme of china
  * You don't need this class for other countries
  *
@@ -12,7 +12,7 @@ package cn.aigestudio.datepicker.bizs.themes;
 public class DPCNTheme extends DPBaseTheme {
     /**
      * 农历文本颜色
-     * <p/>
+     * 
      * Color of Lunar text
      *
      * @return 16进制颜色值 hex color
@@ -23,7 +23,7 @@ public class DPCNTheme extends DPBaseTheme {
 
     /**
      * 补休日期背景颜色
-     * <p/>
+     * 
      * Color of Deferred background
      *
      * @return 16进制颜色值 hex color

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * 月历抽象父类
  * 继承该类可以实现自己的日历对象
- * <p/>
+ *
  * Abstract class of Calendar
  *
  * @author AigeStudio 2015-06-15
@@ -17,7 +17,7 @@ public abstract class DPCalendar {
 
     /**
      * 获取某年某月的节日数组
-     * <p/>
+     *
      * Build the festival date array of given year and month
      *
      * @param year  某年
@@ -28,7 +28,7 @@ public abstract class DPCalendar {
 
     /**
      * 获取某年某月的假期数组
-     * <p/>
+     *
      * Build the holiday date array of given year and month
      *
      * @param year  某年

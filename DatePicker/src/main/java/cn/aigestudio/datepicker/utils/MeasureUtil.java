@@ -4,6 +4,7 @@ import android.content.Context;
 
 /**
  * 测量工具类
+ *
  * Util of measure.
  *
  * @author AigeStudio 2015-03-26

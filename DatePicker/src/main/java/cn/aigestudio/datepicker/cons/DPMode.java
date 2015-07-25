@@ -3,7 +3,7 @@ package cn.aigestudio.datepicker.cons;
 /**
  * 日期选择模式
  * 支持单选和多选
- * <p/>
+ *
  * Date select mode
  * Support SINGLE or MULTIPLE
  *

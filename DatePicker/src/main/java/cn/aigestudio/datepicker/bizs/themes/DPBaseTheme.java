@@ -2,7 +2,7 @@ package cn.aigestudio.datepicker.bizs.themes;
 
 /**
  * 主题的默认实现类
- * <p/>
+ * 
  * The default implement of theme
  *
  * @author AigeStudio 2015-06-17

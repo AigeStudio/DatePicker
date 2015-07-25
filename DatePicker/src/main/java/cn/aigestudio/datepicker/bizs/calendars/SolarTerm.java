@@ -5,6 +5,7 @@ import cn.aigestudio.datepicker.utils.DataUtils;
 /**
  * 农历二十四节气算法
  * 该算法目前仅对外提供一个接口方法获取某年的节气数据{@link #buildSolarTerm(int)}
+ *
  * Algorithm of lunar solar term.
  * This algorithm provide a public method to get the all solar term of year.{@link #buildSolarTerm(int)}
  *

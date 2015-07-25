@@ -3,7 +3,7 @@ package cn.aigestudio.datepicker.bizs.themes;
 /**
  * 日历主题管理器
  * 在DatePicker被实例化前调用{@link #initCalendar(DPTheme)}方法来初始化一个日历主题对象
- * <p/>
+ * 
  * DatePicker theme manager
  * Call {@link #initCalendar(DPTheme)} method to initialization a theme before DatePicker instance
  *
@@ -20,7 +20,7 @@ public final class DPTManager {
 
     /**
      * 获取日历主题管理器
-     * <p/>
+     * 
      * Get DatePicker theme manager
      *
      * @return 日历主题管理器 DatePicker theme manager
@@ -34,7 +34,7 @@ public final class DPTManager {
 
     /**
      * 初始化主题对象
-     * <p/>
+     * 
      * Initialization Theme
      *
      * @param theme ...

@@ -3,7 +3,7 @@ package cn.aigestudio.datepicker.entities;
 /**
  * 日历数据实体
  * 封装日历绘制时需要的数据
- * <p/>
+ * 
  * Entity of calendar
  *
  * @author AigeStudio 2015-03-26

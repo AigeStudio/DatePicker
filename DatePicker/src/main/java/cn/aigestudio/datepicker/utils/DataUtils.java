@@ -2,7 +2,7 @@ package cn.aigestudio.datepicker.utils;
 
 /**
  * 数组操作工具类
- * <p/>
+ * 
  * Utils of data operation
  *
  * @author AigeStudio 2015-07-22
