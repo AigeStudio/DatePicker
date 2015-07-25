@@ -42,7 +42,7 @@ public final class DPCManager {
 
     /**
      * 获取月历管理器
-     * <p/>
+     * 
      * Get calendar manager
      *
      * @return 月历管理器
@@ -56,7 +56,7 @@ public final class DPCManager {
 
     /**
      * 初始化日历对象
-     * <p/>
+     * 
      * Initialization Calendar
      *
      * @param c ...
@@ -67,7 +67,7 @@ public final class DPCManager {
 
     /**
      * 设置有背景标识物的日期
-     * <p/>
+     * 
      * Set date which has decor of background
      *
      * @param date 日期列表 List of date
@@ -78,7 +78,7 @@ public final class DPCManager {
 
     /**
      * 设置左上角有标识物的日期
-     * <p/>
+     * 
      * Set date which has decor on Top left
      *
      * @param date 日期列表 List of date
@@ -89,7 +89,7 @@ public final class DPCManager {
 
     /**
      * 设置顶部有标识物的日期
-     * <p/>
+     * 
      * Set date which has decor on Top
      *
      * @param date 日期列表 List of date
@@ -100,7 +100,7 @@ public final class DPCManager {
 
     /**
      * 设置右上角有标识物的日期
-     * <p/>
+     * 
      * Set date which has decor on Top right
      *
      * @param date 日期列表 List of date
@@ -111,7 +111,7 @@ public final class DPCManager {
 
     /**
      * 设置左边有标识物的日期
-     * <p/>
+     * 
      * Set date which has decor on left
      *
      * @param date 日期列表 List of date
@@ -122,7 +122,7 @@ public final class DPCManager {
 
     /**
      * 设置右上角有标识物的日期
-     * <p/>
+     * 
      * Set date which has decor on right
      *
      * @param date 日期列表 List of date
