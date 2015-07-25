@@ -40,15 +40,15 @@ import cn.aigestudio.datepicker.entities.DPInfo;
  * @author AigeStudio 2015-06-29
  */
 public class MonthView extends View {
-    private static final Region[][] MONTH_REGIONS_4 = new Region[4][7];
-    private static final Region[][] MONTH_REGIONS_5 = new Region[5][7];
-    private static final Region[][] MONTH_REGIONS_6 = new Region[6][7];
+    private final Region[][] MONTH_REGIONS_4 = new Region[4][7];
+    private final Region[][] MONTH_REGIONS_5 = new Region[5][7];
+    private final Region[][] MONTH_REGIONS_6 = new Region[6][7];
 
-    private static final DPInfo[][] INFO_4 = new DPInfo[4][7];
-    private static final DPInfo[][] INFO_5 = new DPInfo[5][7];
-    private static final DPInfo[][] INFO_6 = new DPInfo[6][7];
+    private final DPInfo[][] INFO_4 = new DPInfo[4][7];
+    private final DPInfo[][] INFO_5 = new DPInfo[5][7];
+    private final DPInfo[][] INFO_6 = new DPInfo[6][7];
 
-    private static final Map<String, List<Region>> REGION_SELECTED = new HashMap<>();
+    private final Map<String, List<Region>> REGION_SELECTED = new HashMap<>();
 
     private DPCManager mCManager = DPCManager.getInstance();
     private DPTManager mTManager = DPTManager.getInstance();

@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cn.aigestudio.datepicker.interfaces.OnDateSelected;
+import cn.aigestudio.datepicker.bizs.calendars.DPCManager;
+import cn.aigestudio.datepicker.bizs.decors.DPDecor;
+import cn.aigestudio.datepicker.cons.DPMode;
 import cn.aigestudio.datepicker.views.DatePicker;
 
 /**
@@ -39,11 +41,12 @@ public class MainActivity extends Activity {
 
         // 默认多选模式
         DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
-        picker.setOnDateSelected(new OnDateSelected() {
+        picker.setDate(2015, 7);
+        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
             @Override
-            public void selected(List<String> strings) {
+            public void onDateSelected(List<String> date) {
                 String result = "";
-                Iterator iterator = strings.iterator();
+                Iterator iterator = date.iterator();
                 while (iterator.hasNext()) {
                     result += iterator.next();
                     if (iterator.hasNext()) {
@@ -132,23 +135,17 @@ public class MainActivity extends Activity {
                 final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
                 dialog.show();
                 DatePicker picker = new DatePicker(MainActivity.this);
-                picker.setOnDateSelected(new OnDateSelected() {
+                picker.setDate(2015, 7);
+                picker.setMode(DPMode.SINGLE);
+                picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
                     @Override
-                    public void selected(List<String> strings) {
-                        String result = "";
-                        Iterator iterator = strings.iterator();
-                        while (iterator.hasNext()) {
-                            result += iterator.next();
-                            if (iterator.hasNext()) {
-                                result += "\n";
-                            }
-                        }
-                        Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+                    public void onDatePicked(String date) {
+                        Toast.makeText(MainActivity.this, date, Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 });
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                        .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dialog.getWindow().setContentView(picker, params);
                 dialog.getWindow().setGravity(Gravity.CENTER);
             }
