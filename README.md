@@ -49,7 +49,7 @@
 * 该版本后不再作重大更新
 
 ###2.0.1 stable
-BugFix：忘记更改测试代码导致的显示问题
+* BugFix：忘记更改测试代码导致的显示问题
 
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
@@ -310,22 +310,22 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 * You must specify a exactly width like 320dp or match_parent whether portrait or landscape, In most cases the datepicker is use with dialog, and it will match screen in default mode, you can refer to demo to change dialog width.
 
 ###2.0.0 stable LTS
-*API Support to 1, display the animation on API 11 or above.
-*Support single and multiple choice
-*Add week view
-*Support slide up and down to swith years and left and right for months
-*Festival text display in two lines
-*Change color for material design
-*Add specific background color for holidays and deferred holidays when you use China calendar
-*Add specific background color for today in calendar
-*Support specify current year and month
-*Provide five areas in foreground to draw custom decor
-*Provide a area in background to draw custom background decor
-*Preset chinese and english language display based on current language environment auto swith
-*Support custom language extends
-*Preset China and America festival display
-*Support custom festival extends
-*Support custom theme color extends
+* API Support to 1, display the animation on API 11 or above.
+* Support single and multiple choice
+* Add week view
+* Support slide up and down to swith years and left and right for months
+* Festival text display in two lines
+* Change color for material design
+* Add specific background color for holidays and deferred holidays when you use China calendar
+* Add specific background color for today in calendar
+* Support specify current year and month
+* Provide five areas in foreground to draw custom decor
+* Provide a area in background to draw custom background decor
+* Preset chinese and english language display based on current language environment auto swith
+* Support custom language extends
+* Preset China and America festival display
+* Support custom festival extends
+* Support custom theme color extends
 
 ###2.0.1 stable
 BugFix:Something display problem
@@ -466,7 +466,74 @@ In this case, we draw a red circle background to mark date 2015-7-1 2015-7-8 201
 
 ![](https://github.com/AigeStudio/DatePicker/blob/master/BG.jpg)
 
+The custom background layer DatePicker 2.0 provided is below text layer and above all other background layer.
 
+Of course you may want to draw something on foreground, DatePicker 2.0 provide five areas of a foreground layer like below:
+
+![](https://github.com/AigeStudio/DatePicker/blob/master/Decor.jpg)
+
+You can draw differen graph on these area if you want. The draw logic of this like draw background. For example, we draw a rectangle on the top left of date 2015-7-5 and draw a circle on th top right of date 2015-7-10:
+
+```Java
+......
+List<String> tmpTL = new ArrayList<>();
+tmpTL.add("2015-7-5");
+DPCManager.getInstance().setDecorTL(tmpTL);
+
+List<String> tmpTR = new ArrayList<>();
+tmpTR.add("2015-7-10");
+DPCManager.getInstance().setDecorTR(tmpTR);
+......
+```
+
+And then call the setDPDecor method of DatePicker and overwrite corresponding method:
+
+```Java
+......
+List<String> tmpTL = new ArrayList<>();
+tmpTL.add("2015-7-5");
+DPCManager.getInstance().setDecorTL(tmpTL);
+
+List<String> tmpTR = new ArrayList<>();
+tmpTR.add("2015-7-10");
+DPCManager.getInstance().setDecorTR(tmpTR);
+
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setDPDecor(new DPDecor() {
+    @Override
+    public void drawDecorTL(Canvas canvas, Rect rect, Paint paint) {
+        paint.setColor(Color.GREEN);
+        canvas.drawRect(rect, paint);
+    }
+
+    @Override
+    public void drawDecorTR(Canvas canvas, Rect rect, Paint paint) {
+        paint.setColor(Color.BLUE);
+        canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2, paint);
+    }
+});
+picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+    @Override
+    public void onDateSelected(List<String> date) {
+        String result = "";
+        Iterator iterator = date.iterator();
+        while (iterator.hasNext()) {
+            result += iterator.next();
+            if (iterator.hasNext()) {
+                result += "\n";
+            }
+        }
+        Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+    }
+});
+......
+```
+
+![](https://github.com/AigeStudio/DatePicker/blob/master/DecorExample.jpg)
+
+###Function expansion
+DatePicker 2.0 provide three manager to manage differen function, we use DPCManager to manage date and calendar; Use DPLManager to manage language; Use DPTManager to manage theme color, all of these manager support custom, you can find the usage in notes.
 
 ***
 
