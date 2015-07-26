@@ -430,7 +430,7 @@ public class MonthView extends View {
                 mDPDecor.drawDecorTL(canvas, canvas.getClipBounds(), mPaint);
                 canvas.restore();
             }
-            if (null != mDPDecor && info.isDecorL) {
+            if (null != mDPDecor && info.isDecorT) {
                 canvas.save();
                 canvas.clipRect(rect.left + sizeDecor, rect.top, rect.left + sizeDecor2x,
                         rect.top + sizeDecor);
