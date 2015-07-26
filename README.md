@@ -51,6 +51,9 @@
 ###2.0.1 stable
 * BugFix：忘记更改测试代码导致的显示问题
 
+###2.0.2 stable
+* BugFix：顶部装饰物绘制错位问题
+
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
@@ -330,6 +333,8 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 ###2.0.1 stable
 BugFix:Something display problem
 
+###2.0.2 stable
+BugFix:The decor of top area can not be display
 
 ##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
