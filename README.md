@@ -294,7 +294,9 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 ##Android API Needs
 ~~API 1~~
 
-**API 11**
+~~API 11~~
+
+**API 1**
 
 ##Version
 ###1.0.0 beta
@@ -307,20 +309,35 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 ###1.1.3 release
 * You must specify a exactly width like 320dp or match_parent whether portrait or landscape, In most cases the datepicker is use with dialog, and it will match screen in default mode, you can refer to demo to change dialog width.
 
+###2.0.0 stable LTS
+*API Support to 1, display the animation on API 11 or above.
+*Support single and multiple choice
+*Add week view
+*Support slide up and down to swith years and left and right for months
+*Festival text display in two lines
+*Change color for material design
+*Add specific background color for holidays and deferred holidays when you use China calendar
+*Add specific background color for today in calendar
+*Support specify current year and month
+*Provide five areas in foreground to draw custom decor
+*Provide a area in background to draw custom background decor
+*Preset chinese and english language display based on current language environment auto swith
+*Support custom language extends
+*Preset China and America festival display
+*Support custom festival extends
+*Support custom theme color extends
+
+###2.0.1 stable
+BugFix:Something display problem
+
+
 ##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
-
-##Function
-* multiple-pick for date
-* specify primary colour
-* hide lunar display
-
-You can see [IPick.java](https://github.com/AigeStudio/DatePicker/blob/master/DatePicker/src/main/java/cn/aigestudio/datepicker/interfaces/IPick.java) for more help.
 
 ##How to add to your project
 ###Method A:compile from maven center
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:1.1.3'
+compile 'cn.aigestudio.datepicker:DatePicker:2.0.1'
 ```
 
 ###Method B:Help yourself
@@ -350,25 +367,106 @@ compile project(':DatePicker')
 ```
 
 ##Usage
+###Simple use
 Once you add DatePicker to your project you can use it like other views which android define.
 
-You need to set a OnDateSelected callback if you want to obtain dates when dates picked.
+You need to set a OnDateSelectedListener callback if you want to obtain dates when dates picked.
 
 ```Java
-mDatePicker = (DatePicker) findViewById(R.id.main_dp);
-mDatePicker.setOnDateSelected(new OnDateSelected() {
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
     @Override
-    public void selected(List<String> date) {
-        // Get dates here
+    public void onDateSelected(List<String> date) {
+        String result = "";
+        Iterator iterator = date.iterator();
+        while (iterator.hasNext()) {
+            result += iterator.next();
+            if (iterator.hasNext()) {
+                result += "\n";
+            }
+        }
+        Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
     }
 });
 ```
 
-The dates you picker will return in the form of string list,format of string like below:
+setDate method to set year and month current display.***note: setDate method must be call, that's mean you must set a exactly year and month for DatePicker.***
 
->yyyy-MM-dd
+By default the select mode of DatePicker 2.0 is multiple, you can call method setMode to change the select mode, it accept a enum value type of DPMode:
+
+```Java
+......
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setMode(DPMode.SINGLE);
+......
+```
+
+if you want to obtain date when date picked, you can not set the OnDateSelectedListener like below, you have to set the OnDatePickedListener:
+
+```Java
+......
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setMode(DPMode.SINGLE);
+picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
+    @Override
+    public void onDatePicked(String date) {
+        Toast.makeText(MainActivity.this, date, Toast.LENGTH_LONG).show();
+    }
+});
+......
+```
+
+***Pay attention to this, you can not set the select mode both single and multiple.***
+
+The dates you picker will return in the form of string list(In multiple select) or string(In single select),format of string like below:
+
+>yyyy-M-d
 
 For example:2015-3-28
+
+###Advanced customization
+DatePicker 2.0 has a default display mechanism, there are different color of background circle to mark date of holidays and deferred holidays when you use china calendar, for other countries, only holidays will be marked, But in some cases, you may want to draw your mark of specific dates, DatePicker 2.0 provided a backgroung layer to user to draw your own background. For example, you may want to draw different color circle on 2015-7-1 2015-7-8 and 2015-7-16, the first thing you need to do is call the setDecorBG of DPCManager to set these dates:
+
+```Java
+......
+List<String> tmp = new ArrayList<>();
+tmp.add("2015-7-1");
+tmp.add("2015-7-8");
+tmp.add("2015-7-16");
+DPCManager.getInstance().setDecorBG(tmp);
+......
+```
+
+And then you can draw the different background through setDPDecor method of DatePicker:
+
+```Java
+......
+List<String> tmp = new ArrayList<>();
+tmp.add("2015-7-1");
+tmp.add("2015-7-8");
+tmp.add("2015-7-16");
+DPCManager.getInstance().setDecorBG(tmp);
+
+DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+picker.setDate(2015, 7);
+picker.setDPDecor(new DPDecor() {
+    @Override
+    public void drawDecorBG(Canvas canvas, Rect rect, Paint paint) {
+        paint.setColor(Color.RED);
+        canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2F, paint);
+    }
+});
+......
+```
+
+In this case, we draw a red circle background to mark date 2015-7-1 2015-7-8 2015-7-16:
+
+![](https://github.com/AigeStudio/DatePicker/blob/master/BG.jpg)
+
+
 
 ***
 

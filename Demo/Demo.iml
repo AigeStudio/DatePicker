@@ -86,6 +86,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="DatePicker-DatePicker" exported="" />
+    <orderEntry type="library" exported="" name="DatePicker-2.0.1" level="project" />
   </component>
 </module>
