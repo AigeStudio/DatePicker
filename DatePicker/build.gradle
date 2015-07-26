@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 1
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "2.0.2"
     }
     buildTypes {
         release {
@@ -21,4 +21,3 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
-

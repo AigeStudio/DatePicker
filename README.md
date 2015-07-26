@@ -60,7 +60,7 @@
 ##如何集成到项目
 ###方式一 直接从maven center compile
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:2.0.1'
+compile 'cn.aigestudio.datepicker:DatePicker:2.0.2'
 ```
 
 ###方式二 手动导入
@@ -342,7 +342,7 @@ BugFix:The decor of top area can not be display
 ##How to add to your project
 ###Method A:compile from maven center
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:2.0.1'
+compile 'cn.aigestudio.datepicker:DatePicker:2.0.2'
 ```
 
 ###Method B:Help yourself
