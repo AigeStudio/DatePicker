@@ -54,13 +54,17 @@
 ###2.0.2 stable
 * BugFix：顶部装饰物绘制错位问题
 
+###2.1.0 
+* 修改装饰物绘制逻辑，可根据日期在同一区域绘制不同装饰物
+
 ##预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
 ##如何集成到项目
 ###方式一 直接从maven center compile
+~~compile 'cn.aigestudio.datepicker:DatePicker:2.0.2'~~
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:2.0.2'
+compile 'cn.aigestudio.datepicker:DatePicker:2.1.0'
 ```
 
 ###方式二 手动导入
@@ -336,13 +340,17 @@ BugFix:Something display problem
 ###2.0.2 stable
 BugFix:The decor of top area can not be display
 
+###2.1.0 
+* Draw different decorate according to date.
+
 ##Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
 ##How to add to your project
 ###Method A:compile from maven center
+~~compile 'cn.aigestudio.datepicker:DatePicker:2.0.2'~~
 ```gradle
-compile 'cn.aigestudio.datepicker:DatePicker:2.0.2'
+compile 'cn.aigestudio.datepicker:DatePicker:2.1.0'
 ```
 
 ###Method B:Help yourself
