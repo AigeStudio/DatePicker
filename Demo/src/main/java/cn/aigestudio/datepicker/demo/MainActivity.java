@@ -39,23 +39,23 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        // 默认多选模式
-        DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
-        picker.setDate(2015, 7);
-        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(List<String> date) {
-                String result = "";
-                Iterator iterator = date.iterator();
-                while (iterator.hasNext()) {
-                    result += iterator.next();
-                    if (iterator.hasNext()) {
-                        result += "\n";
-                    }
-                }
-                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-            }
-        });
+//        // 默认多选模式
+//        DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+//        picker.setDate(2015, 7);
+//        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+//            @Override
+//            public void onDateSelected(List<String> date) {
+//                String result = "";
+//                Iterator iterator = date.iterator();
+//                while (iterator.hasNext()) {
+//                    result += iterator.next();
+//                    if (iterator.hasNext()) {
+//                        result += "\n";
+//                    }
+//                }
+//                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         // 自定义背景绘制示例 Example of custom date's background
 //        List<String> tmp = new ArrayList<>();
@@ -89,43 +89,78 @@ public class MainActivity extends Activity {
 //        });
 
         // 自定义前景装饰物绘制示例 Example of custom date's foreground decor
-//        List<String> tmpTL = new ArrayList<>();
-//        tmpTL.add("2015-7-5");
-//        DPCManager.getInstance().setDecorTL(tmpTL);
-//
-//        List<String> tmpTR = new ArrayList<>();
-//        tmpTR.add("2015-7-10");
-//        DPCManager.getInstance().setDecorTR(tmpTR);
-//
-//        DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
-//        picker.setDate(2015, 7);
-//        picker.setDPDecor(new DPDecor() {
-//            @Override
-//            public void drawDecorTL(Canvas canvas, Rect rect, Paint paint) {
-//                paint.setColor(Color.GREEN);
-//                canvas.drawRect(rect, paint);
-//            }
-//
-//            @Override
-//            public void drawDecorTR(Canvas canvas, Rect rect, Paint paint) {
-//                paint.setColor(Color.BLUE);
-//                canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2, paint);
-//            }
-//        });
-//        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
-//            @Override
-//            public void onDateSelected(List<String> date) {
-//                String result = "";
-//                Iterator iterator = date.iterator();
-//                while (iterator.hasNext()) {
-//                    result += iterator.next();
-//                    if (iterator.hasNext()) {
-//                        result += "\n";
-//                    }
-//                }
-//                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-//            }
-//        });
+        List<String> tmpTL = new ArrayList<>();
+        tmpTL.add("2015-10-5");
+        tmpTL.add("2015-10-6");
+        tmpTL.add("2015-10-7");
+        tmpTL.add("2015-10-8");
+        tmpTL.add("2015-10-9");
+        tmpTL.add("2015-10-10");
+        tmpTL.add("2015-10-11");
+        DPCManager.getInstance().setDecorTL(tmpTL);
+
+        List<String> tmpTR = new ArrayList<>();
+        tmpTR.add("2015-10-10");
+        tmpTR.add("2015-10-11");
+        tmpTR.add("2015-10-12");
+        tmpTR.add("2015-10-13");
+        tmpTR.add("2015-10-14");
+        tmpTR.add("2015-10-15");
+        tmpTR.add("2015-10-16");
+        DPCManager.getInstance().setDecorTR(tmpTR);
+
+        DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
+        picker.setDate(2015, 10);
+        picker.setDPDecor(new DPDecor() {
+            @Override
+            public void drawDecorTL(Canvas canvas, Rect rect, Paint paint, String data) {
+                super.drawDecorTL(canvas, rect, paint, data);
+                switch (data) {
+                    case "2015-10-5":
+                    case "2015-10-7":
+                    case "2015-10-9":
+                    case "2015-10-11":
+                        paint.setColor(Color.GREEN);
+                        canvas.drawRect(rect, paint);
+                        break;
+                    default:
+                        paint.setColor(Color.RED);
+                        canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2, paint);
+                        break;
+                }
+            }
+
+            @Override
+            public void drawDecorTR(Canvas canvas, Rect rect, Paint paint, String data) {
+                super.drawDecorTR(canvas, rect, paint, data);
+                switch (data) {
+                    case "2015-10-10":
+                    case "2015-10-11":
+                    case "2015-10-12":
+                        paint.setColor(Color.BLUE);
+                        canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2, paint);
+                        break;
+                    default:
+                        paint.setColor(Color.YELLOW);
+                        canvas.drawRect(rect, paint);
+                        break;
+                }
+            }
+        });
+        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(List<String> date) {
+                String result = "";
+                Iterator iterator = date.iterator();
+                while (iterator.hasNext()) {
+                    result += iterator.next();
+                    if (iterator.hasNext()) {
+                        result += "\n";
+                    }
+                }
+                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        });
 
         // 对话框下的DatePicker示例 Example in dialog
         Button btnPick = (Button) findViewById(R.id.main_btn);
@@ -135,7 +170,7 @@ public class MainActivity extends Activity {
                 final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
                 dialog.show();
                 DatePicker picker = new DatePicker(MainActivity.this);
-                picker.setDate(2015, 7);
+                picker.setDate(2015, 10);
                 picker.setMode(DPMode.SINGLE);
                 picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
                     @Override

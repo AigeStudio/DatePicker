@@ -297,7 +297,8 @@ public class MonthView extends View {
 
     private void drawBGCircle(Canvas canvas, BGCircle circle) {
         canvas.save();
-        canvas.translate(circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2);
+        canvas.translate(circle.getX() - circle.getRadius() / 2,
+                circle.getY() - circle.getRadius() / 2);
         circle.getShape().getShape().resize(circle.getRadius(), circle.getRadius());
         circle.getShape().draw(canvas);
         canvas.restore();
@@ -339,7 +340,8 @@ public class MonthView extends View {
 
     private void drawBG(Canvas canvas, Rect rect, DPInfo info) {
         if (null != mDPDecor && info.isDecorBG) {
-            mDPDecor.drawDecorBG(canvas, rect, mPaint);
+            mDPDecor.drawDecorBG(canvas, rect, mPaint,
+                    centerYear + "-" + centerMonth + "-" + info.strG);
         }
         if (info.isToday) {
             drawBGToday(canvas, rect);
@@ -424,38 +426,39 @@ public class MonthView extends View {
 
     private void drawDecor(Canvas canvas, Rect rect, DPInfo info) {
         if (!TextUtils.isEmpty(info.strG)) {
+            String data = centerYear + "-" + centerMonth + "-" + info.strG;
             if (null != mDPDecor && info.isDecorTL) {
                 canvas.save();
                 canvas.clipRect(rect.left, rect.top, rect.left + sizeDecor, rect.top + sizeDecor);
-                mDPDecor.drawDecorTL(canvas, canvas.getClipBounds(), mPaint);
+                mDPDecor.drawDecorTL(canvas, canvas.getClipBounds(), mPaint, data);
                 canvas.restore();
             }
             if (null != mDPDecor && info.isDecorT) {
                 canvas.save();
                 canvas.clipRect(rect.left + sizeDecor, rect.top, rect.left + sizeDecor2x,
                         rect.top + sizeDecor);
-                mDPDecor.drawDecorT(canvas, canvas.getClipBounds(), mPaint);
+                mDPDecor.drawDecorT(canvas, canvas.getClipBounds(), mPaint, data);
                 canvas.restore();
             }
             if (null != mDPDecor && info.isDecorTR) {
                 canvas.save();
                 canvas.clipRect(rect.left + sizeDecor2x, rect.top, rect.left + sizeDecor3x,
                         rect.top + sizeDecor);
-                mDPDecor.drawDecorTR(canvas, canvas.getClipBounds(), mPaint);
+                mDPDecor.drawDecorTR(canvas, canvas.getClipBounds(), mPaint, data);
                 canvas.restore();
             }
             if (null != mDPDecor && info.isDecorL) {
                 canvas.save();
                 canvas.clipRect(rect.left, rect.top + sizeDecor, rect.left + sizeDecor,
                         rect.top + sizeDecor2x);
-                mDPDecor.drawDecorL(canvas, canvas.getClipBounds(), mPaint);
+                mDPDecor.drawDecorL(canvas, canvas.getClipBounds(), mPaint, data);
                 canvas.restore();
             }
             if (null != mDPDecor && info.isDecorR) {
                 canvas.save();
                 canvas.clipRect(rect.left + sizeDecor2x, rect.top + sizeDecor,
                         rect.left + sizeDecor3x, rect.top + sizeDecor2x);
-                mDPDecor.drawDecorR(canvas, canvas.getClipBounds(), mPaint);
+                mDPDecor.drawDecorR(canvas, canvas.getClipBounds(), mPaint, data);
                 canvas.restore();
             }
         }
@@ -611,8 +614,7 @@ public class MonthView extends View {
                                 onDatePickedListener.onDatePicked(date);
                             }
                         }
-                    }
-                    else if (mDPMode == DPMode.MULTIPLE) {
+                    } else if (mDPMode == DPMode.MULTIPLE) {
                         if (regions.contains(region)) {
                             regions.remove(region);
                         } else {

@@ -21,6 +21,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'cn.aigestudio.datepicker:DatePicker:2.0.1'
-//    compile project(':DatePicker')
+//    compile 'cn.aigestudio.datepicker:DatePicker:2.0.1'
+    compile project(':DatePicker')
 }
