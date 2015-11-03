@@ -96,7 +96,6 @@ public class DPDecor {
 
     /**
      * 绘制当前日期区域右边的装饰物
-     * <p/>
      * Draw decor on right of current date area
      *
      * @param canvas 绘制图形的画布 Canvas of image drew
@@ -117,7 +116,6 @@ public class DPDecor {
 
     /**
      * 绘制当前日期区域背景的装饰物
-     * <p/>
      * Draw decor of background of current date area
      *
      * @param canvas 绘制图形的画布 Canvas of image drew

@@ -181,10 +181,26 @@ public class DatePicker extends LinearLayout {
      * @param mode ...
      */
     public void setMode(DPMode mode) {
-        if (mode == DPMode.SINGLE) {
+        if (mode != DPMode.MULTIPLE) {
             tvEnsure.setVisibility(GONE);
         }
         monthView.setDPMode(mode);
+    }
+
+    public void setFestivalDisplay(boolean isFestivalDisplay) {
+        monthView.setFestivalDisplay(isFestivalDisplay);
+    }
+
+    public void setTodayDisplay(boolean isTodayDisplay) {
+        monthView.setTodayDisplay(isTodayDisplay);
+    }
+
+    public void setHolidayDisplay(boolean isHolidayDisplay) {
+        monthView.setHolidayDisplay(isHolidayDisplay);
+    }
+
+    public void setDeferredDisplay(boolean isDeferredDisplay) {
+        monthView.setDeferredDisplay(isDeferredDisplay);
     }
 
     /**
