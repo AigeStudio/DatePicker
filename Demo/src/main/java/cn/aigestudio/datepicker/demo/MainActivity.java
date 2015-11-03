@@ -111,6 +111,11 @@ public class MainActivity extends Activity {
 
         DatePicker picker = (DatePicker) findViewById(R.id.main_dp);
         picker.setDate(2015, 10);
+        picker.setFestivalDisplay(false);
+        picker.setTodayDisplay(false);
+        picker.setHolidayDisplay(false);
+        picker.setDeferredDisplay(false);
+        picker.setMode(DPMode.NONE);
         picker.setDPDecor(new DPDecor() {
             @Override
             public void drawDecorTL(Canvas canvas, Rect rect, Paint paint, String data) {
@@ -147,20 +152,20 @@ public class MainActivity extends Activity {
                 }
             }
         });
-        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(List<String> date) {
-                String result = "";
-                Iterator iterator = date.iterator();
-                while (iterator.hasNext()) {
-                    result += iterator.next();
-                    if (iterator.hasNext()) {
-                        result += "\n";
-                    }
-                }
-                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-            }
-        });
+//        picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
+//            @Override
+//            public void onDateSelected(List<String> date) {
+//                String result = "";
+//                Iterator iterator = date.iterator();
+//                while (iterator.hasNext()) {
+//                    result += iterator.next();
+//                    if (iterator.hasNext()) {
+//                        result += "\n";
+//                    }
+//                }
+//                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         // 对话框下的DatePicker示例 Example in dialog
         Button btnPick = (Button) findViewById(R.id.main_btn);

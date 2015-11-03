@@ -83,7 +83,11 @@ public class MonthView extends View {
     private float sizeTextGregorian, sizeTextFestival;
     private float offsetYFestival1, offsetYFestival2;
 
-    private boolean isNewEvent;
+    private boolean isNewEvent,
+            isFestivalDisplay = true,
+            isHolidayDisplay = true,
+            isTodayDisplay = true,
+            isDeferredDisplay = true;
 
     private Map<String, BGCircle> cirApr = new HashMap<>();
     private Map<String, BGCircle> cirDpr = new HashMap<>();
@@ -334,7 +338,7 @@ public class MonthView extends View {
     private void draw(Canvas canvas, Rect rect, DPInfo info) {
         drawBG(canvas, rect, info);
         drawGregorian(canvas, rect, info.strG, info.isWeekend);
-        drawFestival(canvas, rect, info.strF, info.isFestival);
+        if (isFestivalDisplay) drawFestival(canvas, rect, info.strF, info.isFestival);
         drawDecor(canvas, rect, info);
     }
 
@@ -343,11 +347,11 @@ public class MonthView extends View {
             mDPDecor.drawDecorBG(canvas, rect, mPaint,
                     centerYear + "-" + centerMonth + "-" + info.strG);
         }
-        if (info.isToday) {
+        if (info.isToday && isTodayDisplay) {
             drawBGToday(canvas, rect);
         } else {
-            drawBGHoliday(canvas, rect, info.isHoliday);
-            drawBGDeferred(canvas, rect, info.isDeferred);
+            if (isHolidayDisplay) drawBGHoliday(canvas, rect, info.isHoliday);
+            if (isDeferredDisplay) drawBGDeferred(canvas, rect, info.isDeferred);
         }
     }
 
@@ -374,7 +378,10 @@ public class MonthView extends View {
         } else {
             mPaint.setColor(mTManager.colorG());
         }
-        canvas.drawText(str, rect.centerX(), rect.centerY(), mPaint);
+        float y = rect.centerY();
+        if (!isFestivalDisplay)
+            y = rect.centerY() + Math.abs(mPaint.ascent()) - (mPaint.descent() - mPaint.ascent()) / 2F;
+        canvas.drawText(str, rect.centerX(), y, mPaint);
     }
 
     private void drawFestival(Canvas canvas, Rect rect, String str, boolean isFestival) {
@@ -497,6 +504,22 @@ public class MonthView extends View {
         computeDate();
         requestLayout();
         invalidate();
+    }
+
+    void setFestivalDisplay(boolean isFestivalDisplay) {
+        this.isFestivalDisplay = isFestivalDisplay;
+    }
+
+    void setTodayDisplay(boolean isTodayDisplay) {
+        this.isTodayDisplay = isTodayDisplay;
+    }
+
+    void setHolidayDisplay(boolean isHolidayDisplay) {
+        this.isHolidayDisplay = isHolidayDisplay;
+    }
+
+    void setDeferredDisplay(boolean isDeferredDisplay) {
+        this.isDeferredDisplay = isDeferredDisplay;
     }
 
     private void smoothScrollTo(int fx, int fy) {
@@ -681,6 +704,19 @@ public class MonthView extends View {
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                                 invalidate();
                             }
+                        }
+                    } else if (mDPMode == DPMode.NONE) {
+                        if (regions.contains(region)) {
+                            regions.remove(region);
+                        } else {
+                            regions.add(region);
+                        }
+                        final String date = centerYear + "-" + centerMonth + "-" +
+                                mCManager.obtainDPInfo(centerYear, centerMonth)[i][j].strG;
+                        if (dateSelected.contains(date)) {
+                            dateSelected.remove(date);
+                        } else {
+                            dateSelected.add(date);
                         }
                     }
                 }
