@@ -9,25 +9,25 @@
 # 日历选择器
 灰常灰常简单的Android日历选择器~~（注：暂不支持横屏操作，农历节气有一到两天的误差）~~
 
-##Android API 版本要求
+## Android API 版本要求
 ~~API 1~~
 
 ~~API 11~~
 
 **API 1**
 
-##版本迭代
-###1.0.0 beta
+## 版本迭代
+### 1.0.0 beta
 * ~~横屏暂未考虑，竖屏暂未发现问题，项目使用中~~
 
-###1.1.2 release
+### 1.1.2 release
 * 增加日期选择时弹性动画
 * 修复设置主色调后农历颜色不改变BUG
 
-###1.1.3 release
+### 1.1.3 release
 * 不管是横屏还是竖屏，你必须总为该控件指定一个确切宽度比如320dp或者填充父布局，大多数情况下该日期选择器都是在dialog中使用，默认dialog宽度是填充屏幕宽度的，你可以参照Demo来更改diaolog的宽度。
 
-###2.0.0 stable LTS
+### 2.0.0 stable LTS
 * API版本支持到1，对于大于等于API11的版本支持动画显示
 * 增加呼声很高的单选模式支持 目前支持两种模式 单选和多选
 * 增加周次标题的显示
@@ -48,32 +48,32 @@
 * 优化代码逻辑提升执行效率
 * 该版本后不再作重大更新
 
-###2.0.1 stable
+### 2.0.1 stable
 * BugFix：忘记更改测试代码导致的显示问题
 
-###2.0.2 stable
+### 2.0.2 stable
 * BugFix：顶部装饰物绘制错位问题
 
-###2.1.0 
+### 2.1.0 
 * 修改装饰物绘制逻辑，可根据日期在同一区域绘制不同装饰物
 
-###2.2.0 
+### 2.2.0 
 * BugFix：最后一个月份当前日期无法显示问题
 
-##预览图
+## 预览图
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
-##如何集成到项目
-###方式一 直接从maven center compile
+## 如何集成到项目
+### 方式一 直接从maven center compile
 ```gradle
 compile 'cn.aigestudio.datepicker:DatePicker:2.2.0'
 ```
 
-###方式二 手动导入
-####步骤一
+### 方式二 手动导入
+#### 步骤一
 将DatePicker这个Module导入你的Project中
 
-####步骤二
+#### 步骤二
 在你Project的settings.gradle文件中增加如下内容：
 
 ```gradle
@@ -88,15 +88,15 @@ include ':YourMoudle',':DatePicker'
 
 添加后当出现“sycn now”提示时点击同步即可
 
-####步骤三
+#### 步骤三
 在你项目的build.gradle文件的dependencies区域中添加如下内容：
 
 ```gradle
 compile project(':DatePicker')
 ```
 
-##如何使用
-###简单使用
+## 如何使用
+### 简单使用
 一旦将DatePicker集成到项目后你便可以像普通控件那样使用它。
 
 如果你需要获取DatePicker日期选择后返回的数据你需要为DatePicker设置一个OnDateSelectedListener监听器：
@@ -158,7 +158,7 @@ picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
 
 比如：2015-3-28
 
-###高级定制
+### 高级定制
 DatePicker 2.0默认了一套显示机制，对于天朝月历而言，2015年的假期与补休都会被不同的背景圆颜色所标识，对于其他国家月历而言只有假期会被标识，当然，在某些情况下你还想在某些特定的日期有自己的显示标识，DatePicker 2.0在原有绘制层的基础上分割出了一个背景层，提供给用户绘制自己想要的标识物。比如你想在2015-7-1，2015-7-8，2015-7-16这三个日期上绘制一个不同的背景圆，首先你要通过DPCManager的setDecorBG方法设置一个日期列表，该列表包含了需要绘制背景标识的日期（在没有特殊说明的情况下，DatePicker 2.0中所使用到的日期格式均与上述一致）：
 
 ```Java
@@ -267,7 +267,7 @@ picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
 
 ***注意！！！这里非常重要的一点是你必须在DatePicker显示前设置DPCManager中的相关数据！！！***
 
-###功能扩展
+### 功能扩展
 DatePicker 2.0提供了三个Manager来管理控件的各项功能，其中DPCManager用于对日期数据的加载，这在上面的介绍中有所提及这里不再多说；DPLManager用于对语言环境的控制，DatePicker 2.0内置中文和英语两种语言并会根据当前系统的语言环境进行自动切换，如果你想扩展更多的语言，只需继承DPLManager并重写相关方法即可，同时你还必须在DPLManager的单例方法中增加相关逻辑以便DatePicker能识别你的语言：
 
 ```Java
@@ -297,28 +297,28 @@ DatePicker 2.0提供了三个Manager来管理控件的各项功能，其中DPCMa
 
 **这里开始是英文文档**
 
-#DatePicker
+# DatePicker
 A simple date picker for android~~(note:it doesn't work with horizontal view yet,and it has one or two days deviation of solar term)~~
 
-##Android API Needs
+## Android API Needs
 ~~API 1~~
 
 ~~API 11~~
 
 **API 1**
 
-##Version
-###1.0.0 beta
+## Version
+### 1.0.0 beta
 * ~~Doesn't work with horizontal view yet,but vertical right.~~
 
-###1.1.2 release
+### 1.1.2 release
 * Add animation when date picked.
 * Bugfix:color does not change when main color set.
 
-###1.1.3 release
+### 1.1.3 release
 * You must specify a exactly width like 320dp or match_parent whether portrait or landscape, In most cases the datepicker is use with dialog, and it will match screen in default mode, you can refer to demo to change dialog width.
 
-###2.0.0 stable LTS
+### 2.0.0 stable LTS
 * API Support to 1, display the animation on API 11 or above.
 * Support single and multiple choice
 * Add week view
@@ -336,32 +336,32 @@ A simple date picker for android~~(note:it doesn't work with horizontal view yet
 * Support custom festival extends
 * Support custom theme color extends
 
-###2.0.1 stable
+### 2.0.1 stable
 BugFix:Something display problem
 
-###2.0.2 stable
+### 2.0.2 stable
 BugFix:The decor of top area can not be display
 
-###2.1.0 
+### 2.1.0 
 * Draw different decorate according to date.
 
-###2.2.0 
+### 2.2.0 
 * BugFix:Current day in last month can not display.
 
-##Preview
+## Preview
 ![](https://github.com/AigeStudio/DatePicker/blob/master/PreviewGif.gif)
 
-##How to add to your project
-###Method A:compile from maven center
+## How to add to your project
+### Method A:compile from maven center
 ```gradle
 compile 'cn.aigestudio.datepicker:DatePicker:2.2.0'
 ```
 
-###Method B:Help yourself
-####step 1
+### Method B:Help yourself
+#### step 1
 import DatePicker lib to your project
 
-####step 2
+#### step 2
 Add something like below in your settings.gradle file of project:
 
 ```gradle
@@ -376,15 +376,15 @@ include ':YourMoudle',':DatePicker'
 
 Click 'sycn now' when it appear after module add.
 
-####step 3
+#### step 3
 Add something like below in your build.gradle file of project:
 
 ```gradle
 compile project(':DatePicker')
 ```
 
-##Usage
-###Simple use
+## Usage
+### Simple use
 Once you add DatePicker to your project you can use it like other views which android define.
 
 You need to set a OnDateSelectedListener callback if you want to obtain dates when dates picked.
@@ -444,7 +444,7 @@ The dates you picker will return in the form of string list(In multiple select) 
 
 For example:2015-3-28
 
-###Advanced customization
+### Advanced customization
 DatePicker 2.0 has a default display mechanism, there are different color of background circle to mark date of holidays and deferred holidays when you use china calendar, for other countries, only holidays will be marked, But in some cases, you may want to draw your mark of specific dates, DatePicker 2.0 provided a backgroung layer to user to draw your own background. For example, you may want to draw different color circle on 2015-7-1 2015-7-8 and 2015-7-16, the first thing you need to do is call the setDecorBG of DPCManager to set these dates:
 
 ```Java
@@ -549,12 +549,12 @@ picker.setOnDateSelectedListener(new DatePicker.OnDateSelectedListener() {
 
 ![](https://github.com/AigeStudio/DatePicker/blob/master/DecorExample.jpg)
 
-###Function expansion
+### Function expansion
 DatePicker 2.0 provide three manager to manage differen function, we use DPCManager to manage date and calendar; Use DPLManager to manage language; Use DPTManager to manage theme color, all of these manager support custom, you can find the usage in notes.
 
 ***
 
-#LICENSE
+# LICENSE
 Copyright 2014-2015 AigeStudio(https://github.com/AigeStudio)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
