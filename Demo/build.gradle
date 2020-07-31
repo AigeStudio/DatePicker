@@ -1,15 +1,9 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies { classpath "com.android.tools.build:gradle:4.0.1" }
-}
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
+        applicationId "com.aigestudio.datepicker.demo"
         minSdkVersion 14
         targetSdkVersion 29
         versionCode 1
@@ -22,9 +16,8 @@ android {
         }
     }
 }
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
+dependencies {
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
