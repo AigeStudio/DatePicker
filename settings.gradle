@@ -1,2 +1,1 @@
-include ':Demo'
-include ':DatePicker'
+rootProject.name = "DatePicker"
